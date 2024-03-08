@@ -1,5 +1,5 @@
 #pip install -U flask
-from flask import Flask
+from flask import Flask, send_file
 from base64 import encodebytes
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import io
@@ -16,11 +16,25 @@ def start_page():
           "   <title>Vision Transformer Model</title>"
           " </body>" +
           " <a href='/patches'>Patches</a>" +
+          " <a href='/training'>Train Model</a>" +
           "</html>")
 def plot_png(fig):
   output = io.BytesIO()
   FigureCanvas(fig).print_png(output)
   return output
+@app.route("/training")
+def training():
+  return ("<html>" +
+          " <body>" +
+          "   <title>Vision Transformer Model</title>"
+          " </body>" +
+          " <img src='/get_image/dense_1_bias_0'/>" +
+          " <img src='/get_image/dense_1_kernel_0'/>" +
+          "</html>")
+
+@app.route('/get_image/<name>', methods=['GET'])
+def get_image(name):
+  return send_file("data/"+name + ".png", mimetype="image/png")
 @app.route("/patches")
 def patches():
   import ViT

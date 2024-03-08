@@ -173,17 +173,46 @@ def display_patches(x_train, image_size, patch_size):
     f"Patches per image: {patches.shape[1]}", 
     f"Elements per patch: {patches.shape[-1]}"]
 
+def weights_to_images(model, batch):
+    for layer in model.layers:
+      for weight in layer.trainable_weights:
+        x = keras.ops.convert_to_numpy(weight) #(x, y) or (x,) or (x, y, z) but we want (x, y, 3)
+        if len(x.shape) == 1: #convert to 2D by making a expanded line
+            x = np.stack([x]*64, axis=1)
+        elif len(x.shape) == 3: #convert to 2D by making a square
+          print(weight.path)
+          assert 4 in x.shape
+          if x.shape[0] == 4:
+            x = np.concatenate([np.concatenate([x[0,:,:], x[1,:,:]], axis=0), np.concatenate([x[2,:,:], x[3,:,:]], axis=0)], axis=1)
+          elif x.shape[1] == 4:
+            x = np.concatenate([np.concatenate([x[:,0,:], x[:,1,:]], axis=0), np.concatenate([x[:,2,:], x[:,3,:]], axis=0)], axis=1)
+        #x = np.stack((x * 256, np.zeros(x.shape), np.zeros(x.shape)), axis=2)
+        #rgb = x * (256*3)
+        #x = np.stack((np.where(rgb<256, rgb, 0), np.where((rgb>=256) & (rgb<512), rgb-256, 0), np.where(rgb>=512, rgb-512, 0)), axis=2)
+        rgb = x * 256 * 256 * 256
+        x = np.stack((rgb % 256, (rgb / 256) % 256, (rgb / (256*256)) % 256), axis=2)
+        if x.shape[0] >= 1024:
+            x = tf.image.resize(tf.convert_to_tensor(x), size=(256, x.shape[1]//(x.shape[0]//256))).numpy()
+        tf.keras.utils.save_img(f"data/{weight.path.replace('/', '_')}_{batch}.png", x, file_format='png')
+        pass #grayscale: weight * 255.0 #or make this a red, green or blue component
+        #convert_weight_to_image(weight)
+        ###RGB: weight * 255.0 * 255.0 * 255.0 cast int32 reshape int8 (...,...,3)
+    assert False
+            
+
 class WeightsCheckpoint(keras.callbacks.Callback):
     def __init__(self, tempdir):
         self.tempdir = tempdir
     def on_train_batch_end(self, batch, logs=None):
         #keys = list(logs.keys())
         #print("...Training: end of batch {}; got log keys: {}".format(batch, keys))
-        self.model.save_weights(os.path.join(self.tempdir, f"all.{batch}.weights.h5"))
+        #self.model.save_weights(os.path.join(self.tempdir, f"all.{batch}.weights.h5"))
+       weights_to_images(self.model, batch)
 
     def on_test_batch_begin(self, batch, logs=None):
         keys = list(logs.keys())
-        print("...Evaluating: start of batch {}; got log keys: {}".format(batch, keys))    
+        print("...Evaluating: start of batch {}; got log keys: {}".format(batch, keys))
+
 
 def run_experiment(factory, model, x_train, y_train, x_test, y_test):
     optimizer = keras.optimizers.AdamW(
@@ -210,26 +239,23 @@ def run_experiment(factory, model, x_train, y_train, x_test, y_test):
     print("Saving to: ", tempdir)
     print(model.summary())
     #model.load_weights(os.path.join(tempdir, "all.0.weights.h5"))
-    g = {}
+    g, layer_weights = {}, {}
     for layer in model.layers: #what is the graph relationship of layers?
       if not layer.name in g: g[layer.name] = []
+      if not layer.name in layer_weights: layer_weights[layer.name] = []
       print("Layer: ", layer.name)
       for node in layer._inbound_nodes:
-         for kt in node.input_tensors:
+        for kt in node.input_tensors:
             keras_history = kt._keras_history
             inbound_layer = keras_history.operation
             g[layer.name].append(inbound_layer.name)
-      for weight in layer.trainable_weights:
-        pass #grayscale: weight * 255.0 #or make this a red, green or blue component
-        #convert_weight_to_image(weight)
-        ###RGB: weight * 255.0 * 255.0 * 255.0 cast int32 reshape int8 (...,...,3)
-    #layer.weights
+        for weight in layer.trainable_weights:
+            layer_weights[layer.name].append(weight.path)
     rg = {}
     for k in g:
        for v in g[k]:
           if not v in rg: rg[v] = []
           rg[v].append(k)
-    assert False
 
     history = model.fit(
         x=x_train,
@@ -245,6 +271,7 @@ def run_experiment(factory, model, x_train, y_train, x_test, y_test):
     print(f"Test accuracy: {round(accuracy * 100, 2)}%")
     print(f"Test top 5 accuracy: {round(top_5_accuracy * 100, 2)}%")
 
+    print(g, rg, layer_weights)
     return history
 
 def plot_history(item, history):
@@ -282,4 +309,4 @@ def test_vit():
   plot_history("loss", history)
   plot_history("top-5-accuracy", history)
 
-test_vit()
+#test_vit()
