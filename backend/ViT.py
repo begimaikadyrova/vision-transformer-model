@@ -272,7 +272,7 @@ def run_experiment(factory, model, x_train, y_train, x_test, y_test):
     print(f"Test top 5 accuracy: {round(top_5_accuracy * 100, 2)}%")
 
     print(g, rg, layer_weights)
-    return history
+    #return history
 
 def plot_history(item, history):
     plt.plot(history.history[item], label=item)
