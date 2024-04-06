@@ -1,7 +1,7 @@
 #pip install -U flask
-from flask import Flask, send_file
+from flask import Flask, send_file, jsonify, make_response
 from flask_cors import CORS
-from base64 import encodebytes
+from base64 import b64encode
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import io
@@ -15,45 +15,33 @@ CORS(app)
 
 @app.route("/")
 def start_page():
-    return ("<html>" +
-            "<body>" +
-            "   <title>Vision Transformer Model</title>" +
-            "   <a href='/patches'>Patches</a>" +
-            "   <a href='/training'>Train Model</a>" +
-            "</body>" +
-            "</html>")
+     return make_response('Vision Transformer Model API', 200)
 
 def plot_png(fig):
   output = io.BytesIO()
   FigureCanvas(fig).print_png(output)
-  return output
+  return output.getvalue()
 
-@app.route("/training")
+@app.route("/training", methods=['GET'])
 def training():
-  return ("<html>" +
-            "<body>" +
-            "   <title>Vision Transformer Model</title>" +
-            "   <img src='/get_image/dense_1_bias_0'/>" +
-            "   <img src='/get_image/dense_1_kernel_0'/>" +
-            "</body>" +
-            "</html>")
+    return make_response('Training endpoint.', 200)
 
 @app.route('/get_image/<name>', methods=['GET'])
 def get_image(name):
   return send_file("data/"+name + ".png", mimetype="image/png")
 
-@app.route("/patches")
+@app.route("/patches", methods=['GET'])
 def patches():
-  figure, figurepatch, text = ViT.only_patches()
-  output, outputpatch = plot_png(figure), plot_png(figurepatch)
-  return ("<html>" +
-          " <body>" +
-          "   <title>Vision Transformer Model</title>" +
-          " <img src='data:image/png;base64, " + encodebytes(output.getvalue()).decode('ascii') + "'/>" +
-          " <img src='data:image/png;base64, " + encodebytes(outputpatch.getvalue()).decode('ascii') + "'/>" +
-          '\n'.join(["<p>" + x + "</p>" for x in text]) + 
-          " </body>" +
-          "</html>")
+    figure, figurepatch, text = ViT.only_patches()
+    output, outputpatch = plot_png(figure), plot_png(figurepatch)
+    response = {
+        "images": [
+            b64encode(output).decode('ascii'),
+            b64encode(outputpatch).decode('ascii')
+        ],
+        "text": text
+    }
+    return jsonify(response)
 
 if __name__ == "__main__":
   app.run(debug=True)

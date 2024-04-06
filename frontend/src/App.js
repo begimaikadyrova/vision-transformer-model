@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './HomePage';
 import Training from './Training';
 import Patches from './Patches';
+import './App.css';
+
 
 function App() {
   return (
@@ -11,7 +13,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/training" element={<Training />} />
         <Route path="/patches" element={<Patches />} />
-        {/* Add more routes as needed */}
+       
       </Routes>
     </Router>
   );

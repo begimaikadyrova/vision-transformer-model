@@ -28,6 +28,57 @@
   color: #61dafb;
 }
 
+.homePageContainer {
+  background-color: #333; /* Dark gray background */
+  color: white; /* White text color */
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.homePageContainer h1 {
+  font-family: 'Roboto Mono', monospace; 
+  margin-top: 20px; 
+  text-align: center; 
+  width: 100%; 
+}
+
+.homePageContainer nav {
+  margin-top: 400px; 
+  text-align: center; 
+  font-family: 'Roboto Mono', monospace; 
+}
+
+.customFont {
+  font-family: 'Roboto Mono', monospace; 
+  font-size: 17px;
+}
+
+.homePageContainer a {
+  color: #0db9d7; 
+  text-decoration: none;
+  pointer-events: auto;
+  font-size: 22px;
+}
+
+.homePageContainer a:hover {
+  color: #08a0b8; 
+  text-decoration: underline; 
+}
+
+.imagesContainer {
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: center; 
+  gap: 20px; 
+  margin: 20px 0; 
+}
+
+
+
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

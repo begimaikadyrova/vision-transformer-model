@@ -1,33 +1,43 @@
 import React, { useState, useEffect } from 'react';
+import './App.css';
+
 
 function Patches() {
   const [patchImages, setPatchImages] = useState([]);
-  const [text, setTexts] = useState([]);
+  const [texts, setTexts] = useState([]);
 
   useEffect(() => {
-    fetch('/patches')
-      .then(response => response.text())
-      .then(html => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        const images = doc.querySelectorAll('img');
-        const paragraphs = doc.querySelectorAll('p');
-        setPatchImages(Array.from(images).map(img => img.src));
-        setTexts(Array.from(paragraphs).map(p => p.textContent));
+    fetch('http://localhost:5000/patches')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setPatchImages(data.images);
+        setTexts(data.text);
+      })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
       });
   }, []);
+  
 
   return (
-    <div>
+    <div className="homePageContainer">
       <h1>Patches</h1>
-      {patchImages.map((src, index) => (
-        <img key={index} src={`data:image/png;base64,${src}`} alt={`Patch ${index}`} />
+      <div className="imagesContainer"> {}
+        {patchImages.map((src, index) => (
+          <img key={index} src={`data:image/png;base64,${src}`} alt={`Patch ${index}`} />
+        ))}
+      </div>
+      {texts.map((text, index) => (
+        <p key={index} className="customFont">{text}</p>
       ))}
-      {Array.isArray(text) ? text.map((t, index) => (
-        <p key={index}>{t}</p>
-      )) : <p>{text}</p>}
     </div>
   );
 }
 
 export default Patches;
+

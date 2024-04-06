@@ -1,13 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './App.css';
+
 
 function HomePage() {
   return (
-    <div>
+    <div className="homePageContainer">
       <h1>Vision Transformer Model</h1>
       <nav>
         <Link to="/patches">Patches</Link> |{" "}
-        <Link to="/training">Train Model</Link>
+        <Link to="/training">Training</Link>
       </nav>
     </div>
   );
