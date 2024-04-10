@@ -9,7 +9,8 @@ function HomePage() {
       <h1>Vision Transformer Model</h1>
       <nav>
         <Link to="/patches">Patches</Link> |{" "}
-        <Link to="/training">Training</Link>
+        <Link to="/training">Training</Link> | {" "}
+        <Link to="/graph">Graph</Link>
       </nav>
     </div>
   );

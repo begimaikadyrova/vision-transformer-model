@@ -5,17 +5,20 @@
 #https://keras.io/examples/vision/image_classification_with_vision_transformer/
 
 import os, tempfile
-
-os.environ["KERAS_BACKEND"] = "tensorflow"  # @param ["tensorflow", "jax", "torch"]
-
 import keras
 from keras import layers
 from keras import ops
 import tensorflow as tf
-
-
 import numpy as np
 import matplotlib.pyplot as plt
+
+
+
+
+
+os.environ["KERAS_BACKEND"] = "tensorflow"  # @param ["tensorflow", "jax", "torch"]
+
+
 
 def mlp(x, hidden_units, dropout_rate):
     for units in hidden_units:
@@ -237,6 +240,61 @@ def run_experiment(factory, model, x_train, y_train, x_test, y_test):
         save_weights_only=True,
     )
     print("Saving to: ", tempdir)
+    
+    print(model.summary())
+    #model.load_weights(os.path.join(tempdir, "all.0.weights.h5"))
+    
+
+    history = model.fit(
+        x=x_train,
+        y=y_train,
+        batch_size=factory.batch_size,
+        epochs=factory.num_epochs,
+        validation_split=0.1,
+        callbacks=[checkpoint_callback, WeightsCheckpoint(tempdir)],
+    )
+
+    model.load_weights(checkpoint_filepath)
+    _, accuracy, top_5_accuracy = model.evaluate(x_test, y_test)
+    print(f"Test accuracy: {round(accuracy * 100, 2)}%")
+    print(f"Test top 5 accuracy: {round(top_5_accuracy * 100, 2)}%")
+
+    
+    #return history
+
+def plot_history(item, history):
+    plt.plot(history.history[item], label=item)
+    plt.plot(history.history["val_" + item], label="val_" + item)
+    plt.xlabel("Epochs")
+    plt.ylabel(item)
+    plt.title("Train and Validation {} Over Epochs".format(item), fontsize=14)
+    plt.legend()
+    plt.grid()
+    plt.show()
+
+def only_patches():
+  num_classes = 100
+  input_shape = (32, 32, 3)
+  (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
+  #(x_train, y_train), (x_test, y_test) = keras.datasets.cifar100.load_data()
+  factory = ViT(num_classes, input_shape, x_train)
+  return display_patches(x_train, factory.image_size, factory.patch_size)
+
+def get_graph(factory, model):
+    optimizer = keras.optimizers.AdamW(
+        learning_rate=factory.learning_rate, weight_decay=factory.weight_decay
+    )
+
+    model.compile(
+        optimizer=optimizer,
+        loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+        metrics=[
+            keras.metrics.SparseCategoricalAccuracy(name="accuracy"),
+            keras.metrics.SparseTopKCategoricalAccuracy(5, name="top-5-accuracy"),
+        ],        
+    )
+
+    
     print(model.summary())
     #model.load_weights(os.path.join(tempdir, "all.0.weights.h5"))
     g, layer_weights = {}, {}
@@ -257,56 +315,38 @@ def run_experiment(factory, model, x_train, y_train, x_test, y_test):
           if not v in rg: rg[v] = []
           rg[v].append(k)
 
-    history = model.fit(
-        x=x_train,
-        y=y_train,
-        batch_size=factory.batch_size,
-        epochs=factory.num_epochs,
-        validation_split=0.1,
-        callbacks=[checkpoint_callback, WeightsCheckpoint(tempdir)],
-    )
+   
 
-    model.load_weights(checkpoint_filepath)
-    _, accuracy, top_5_accuracy = model.evaluate(x_test, y_test)
-    print(f"Test accuracy: {round(accuracy * 100, 2)}%")
-    print(f"Test top 5 accuracy: {round(top_5_accuracy * 100, 2)}%")
+    return (g, rg, layer_weights)
 
-    print(g, rg, layer_weights)
-    #return history
+def get_factory_model():
+    num_classes = 100
+    input_shape = (32, 32, 3)
+    (x_train, y_train), (x_test, y_test) = keras.datasets.cifar100.load_data()
+    print(f"x_train shape: {x_train.shape} - y_train shape: {y_train.shape}")
+    print(f"x_test shape: {x_test.shape} - y_test shape: {y_test.shape}")
 
-def plot_history(item, history):
-    plt.plot(history.history[item], label=item)
-    plt.plot(history.history["val_" + item], label="val_" + item)
-    plt.xlabel("Epochs")
-    plt.ylabel(item)
-    plt.title("Train and Validation {} Over Epochs".format(item), fontsize=14)
-    plt.legend()
-    plt.grid()
-    plt.show()
+    factory = ViT(num_classes, input_shape, x_train)
+    display_patches(x_train, factory.image_size, factory.patch_size)
 
-def only_patches():
-  num_classes = 100
-  input_shape = (32, 32, 3)
-  (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
-  #(x_train, y_train), (x_test, y_test) = keras.datasets.cifar100.load_data()
-  factory = ViT(num_classes, input_shape, x_train)
-  return display_patches(x_train, factory.image_size, factory.patch_size)
+    
+    model = factory.create_vit_classifier() 
+    return (factory, model, x_train, y_train, x_test, y_test)
+  
+   
     
 def test_vit():
-  num_classes = 100
-  input_shape = (32, 32, 3)
+    factory, model, x_train, y_train, x_test, y_test = get_factory_model()
+    from tensorflow.keras.utils import plot_model
+    plot_model(model, to_file='model_architecture.png', show_shapes=True, show_layer_names=True, rankdir='TB', expand_nested=True)
 
-  (x_train, y_train), (x_test, y_test) = keras.datasets.cifar100.load_data()
 
-  print(f"x_train shape: {x_train.shape} - y_train shape: {y_train.shape}")
-  print(f"x_test shape: {x_test.shape} - y_test shape: {y_test.shape}")
+    history = run_experiment(factory, model, x_train, y_train, x_test, y_test)
+    plot_history("loss", history)
+    plot_history("top-5-accuracy", history)
 
-  factory = ViT(num_classes, input_shape, x_train)
-  display_patches(x_train, factory.image_size, factory.patch_size)
-
-  model = factory.create_vit_classifier()         
-  history = run_experiment(factory, model, x_train, y_train, x_test, y_test)
-  plot_history("loss", history)
-  plot_history("top-5-accuracy", history)
 
 #test_vit()
+
+
+#save and load model

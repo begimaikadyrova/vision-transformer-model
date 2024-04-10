@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import './App.css';
 
 
+
 function Patches() {
+  const initialized = useRef(false)
   const [patchImages, setPatchImages] = useState([]);
   const [texts, setTexts] = useState([]);
 
   useEffect(() => {
+    if (!initialized.current) {
+      initialized.current = true;
     fetch('http://localhost:5000/patches')
       .then(response => {
         if (!response.ok) {
@@ -21,7 +25,7 @@ function Patches() {
       .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
       });
-  }, []);
+}}, []);
   
 
   return (

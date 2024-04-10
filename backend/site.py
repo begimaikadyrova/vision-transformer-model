@@ -6,6 +6,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import io
 import ViT
+import graph
 
 app = Flask(__name__)
 CORS(app)
@@ -40,6 +41,22 @@ def patches():
             b64encode(outputpatch).decode('ascii')
         ],
         "text": text
+    }
+    return jsonify(response)
+
+@app.route("/get_graph_image", methods=['GET'])
+def graph_route():
+    graph.gen_pydot_graph()
+    return send_file("graph.png", mimetype="image/png")
+
+@app.route("/graph", methods=['GET'])
+def get_graph():
+    factory, model, _, _, _, _ = ViT.get_factory_model()
+    g, rg, layer_weights = ViT.get_graph(factory, model)
+    response = {
+        "graph": g,
+        "rg": rg,
+        "layer_weights": layer_weights
     }
     return jsonify(response)
 
