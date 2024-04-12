@@ -3,7 +3,7 @@ import './App.css';
 
 function Graph() {
   return (
-    <div className="homePageContainer">
+    <div className="trainingContainer">
       <h1>Graph</h1>
       <div className="imagesContainer"> 
         <img src="http://localhost:5000/get_graph_image" alt="Graph" />

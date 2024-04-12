@@ -5,7 +5,7 @@ def gen_pydot_graph():
     factory, model, _, _, _, _ = ViT.get_factory_model()
     g, rg, layer_weights = ViT.get_graph(factory, model)
 
-    graph = pydot.Dot(graph_type='graph')
+    graph = pydot.Dot(graph_type='digraph')
     visited = set()
 
     for node in g:
@@ -28,5 +28,5 @@ def gen_pydot_graph():
     make_graph(next(iter(g)))
 
 
-    graph.write_png('graph.png')
+    graph.write_png('graph2.png')
 
