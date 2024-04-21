@@ -1,11 +1,66 @@
-.App {
-  text-align: center;
-}
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
+.App {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.sidebar {
+  background-color: #242527;
+  color: white;
+  width: 230px; /* Adjust the width as needed */
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  position: fixed;
+  height: 100vh;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar a {
+  color: #adadaf;
+  text-decoration: none;
+  padding: 14px;
+}
+
+.sidebar a:hover {
+  color: white;
+  padding: 14px;
+  background-color: #686c73;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center; /* Vertically center the items */
+}
+
+.nav-item span {
+  margin-left: 8px; /* Add some spacing between icon and text */
+}
+
+
+.content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #f0f0f0; /* Light gray background for the content area */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center children horizontally */
+  color: #333;
+  margin-left: 230px;
+}
+
+
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
