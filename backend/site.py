@@ -46,8 +46,7 @@ def patches():
 
 @app.route("/get_graph_image", methods=['GET'])
 def graph_route():
-    graph.gen_pydot_graph()
-    return send_file("graph2.png", mimetype="image/png")
+    return send_file("graphs/graph11.png", mimetype="image/png")
 
 @app.route("/graph", methods=['GET'])
 def get_graph():

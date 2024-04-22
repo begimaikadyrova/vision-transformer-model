@@ -4,6 +4,8 @@ import './App.css';
 import { TfiLayoutGrid3Alt } from "react-icons/tfi";
 import { MdDisplaySettings } from "react-icons/md";
 import { BsFillDiagram2Fill } from "react-icons/bs";
+import { VscServerProcess } from "react-icons/vsc";
+
 
 
 
@@ -52,6 +54,12 @@ function Patches() {
             <span className="nav-item">
             <BsFillDiagram2Fill />
               <span>Graph</span>
+            </span>
+          </Link>
+          <Link to="/progress">
+            <span className="nav-item">
+            <VscServerProcess />
+              <span>Process</span>
             </span>
           </Link>
         </nav>

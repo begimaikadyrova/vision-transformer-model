@@ -4,6 +4,8 @@ import './App.css';
 import { TfiLayoutGrid3Alt } from "react-icons/tfi";
 import { MdDisplaySettings } from "react-icons/md";
 import { BsFillDiagram2Fill } from "react-icons/bs";
+import { VscServerProcess } from "react-icons/vsc";
+
 
 function HomePage() {
   return (
@@ -30,7 +32,7 @@ function HomePage() {
           </Link>
           <Link to="/progress">
             <span className="nav-item">
-            <BsFillDiagram2Fill />
+            <VscServerProcess />
               <span>Process</span>
             </span>
           </Link>

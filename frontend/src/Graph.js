@@ -4,6 +4,8 @@ import './App.css';
 import { TfiLayoutGrid3Alt } from "react-icons/tfi";
 import { MdDisplaySettings } from "react-icons/md";
 import { BsFillDiagram2Fill } from "react-icons/bs";
+import { VscServerProcess } from "react-icons/vsc";
+
 
 function Graph() {
   return (
@@ -18,26 +20,34 @@ function Graph() {
           </Link>
           <Link to="/training">
             <span className="nav-item">
-            <MdDisplaySettings />
+              <MdDisplaySettings />
               <span>Training</span>
             </span>
           </Link>
           <Link to="/graph">
             <span className="nav-item">
-            <BsFillDiagram2Fill />
+              <BsFillDiagram2Fill />
               <span>Graph</span>
+            </span>
+          </Link>
+          <Link to="/progress">
+            <span className="nav-item">
+              <VscServerProcess />
+              <span>Process</span>
             </span>
           </Link>
         </nav>
       </div>
       <div className="content">
-      <h1>Graph</h1>
-        <img src="http://localhost:5000/get_graph_image" alt="Graph" />
+        <h1>Graph</h1>
+        <h2>Model Overview</h2>
+        <div className='graphpic'>
+          <img src="http://localhost:5000/get_graph_image" alt="Graph" />
+        </div>
+
+      </div>
     </div>
-    </div>
-    
   );
 }
-
 
 export default Graph;
