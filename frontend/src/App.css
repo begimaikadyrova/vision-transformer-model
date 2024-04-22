@@ -59,7 +59,27 @@
   margin-left: 230px;
 }
 
+.homecontent {
+  padding: 20px;
+  background-color: #f0f0f0; 
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  color: #333;
+  margin-left: 230px;
+}
 
+.homecontent h1 {
+  margin-left: 50px;
+}
+
+.centered-text {
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-left: 70px;
+}
 
 
 @media (prefers-reduced-motion: no-preference) {

@@ -5,6 +5,8 @@ import { TfiLayoutGrid3Alt } from "react-icons/tfi";
 import { MdDisplaySettings } from "react-icons/md";
 import { BsFillDiagram2Fill } from "react-icons/bs";
 import { VscServerProcess } from "react-icons/vsc";
+import { LiaHomeSolid } from "react-icons/lia";
+
 
 
 function Training() {
@@ -95,6 +97,12 @@ function Training() {
     <div className="App">
       <div className="sidebar">
         <nav>
+        <Link to="/">
+            <span className="nav-item">
+            <LiaHomeSolid />
+              <span>Main</span>
+            </span>
+          </Link>
           <Link to="/patches">
             <span className="nav-item">
               <TfiLayoutGrid3Alt />
