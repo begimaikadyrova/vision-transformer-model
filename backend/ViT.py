@@ -337,9 +337,7 @@ def get_factory_model():
     
 def test_vit():
     factory, model, x_train, y_train, x_test, y_test = get_factory_model()
-    from keras.utils import plot_model
-    plot_model(model, to_file='model_architecture.png', show_shapes=True, show_layer_names=True, rankdir='TB', expand_nested=True)
-
+    
 
     history = run_experiment(factory, model, x_train, y_train, x_test, y_test)
     plot_history("loss", history)
