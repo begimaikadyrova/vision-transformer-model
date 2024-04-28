@@ -1,12 +1,14 @@
 #pip install -U flask
+
 from flask import Flask, send_file, jsonify, make_response
 from flask_cors import CORS
 from base64 import b64encode
+from matplotlib import streamplot
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import io
 import ViT
-import graph
+
 
 app = Flask(__name__)
 CORS(app)
@@ -23,9 +25,6 @@ def plot_png(fig):
   FigureCanvas(fig).print_png(output)
   return output.getvalue()
 
-@app.route("/training", methods=['GET'])
-def training():
-    return make_response('Training endpoint.', 200)
 
 @app.route('/get_image/<name>', methods=['GET'])
 def get_image(name):
@@ -58,6 +57,9 @@ def get_graph():
         "layer_weights": layer_weights
     }
     return jsonify(response)
+
+
+
 
 if __name__ == "__main__":
   app.run(debug=True)

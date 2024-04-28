@@ -8,6 +8,47 @@
   font-family: 'Roboto Mono', monospace;
 }
 
+body {
+  margin: 0;
+}
+
+
+
+.selectMenu select {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 15px;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  background-color: #adadaf;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1050;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.modal img {
+  width: auto;
+  max-width: 90%;
+  max-height: 80vh;
+}
+
+.modal button {
+  display: block;
+  margin: 10px auto;
+  padding: 5px 20px;
+}
+
+
+
+
 .sidebar {
   background-color: #242527;
   color: white;
@@ -41,10 +82,12 @@
 .nav-item {
   display: flex;
   align-items: center; /* Vertically center the items */
+
 }
 
 .nav-item span {
   margin-left: 8px; /* Add some spacing between icon and text */
+  font-size: 17px;
 }
 
 

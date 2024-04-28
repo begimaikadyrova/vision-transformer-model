@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import './App.css';
 import { TfiLayoutGrid3Alt } from "react-icons/tfi";
@@ -9,7 +8,8 @@ import { LiaHomeSolid } from "react-icons/lia";
 
 
 
-function HomePage() {
+function Progress() {
+ 
   return (
     <div className="App">
       <div className="sidebar">
@@ -47,10 +47,10 @@ function HomePage() {
         </nav>
       </div>
       <div className="content">
-        <h1>Vision Transformer Model</h1>
-      </div>
+            <h1>Vision Transformer Model</h1>
+        </div>
     </div>
-  );
+);
 }
 
-export default HomePage;
+export default Progress;
