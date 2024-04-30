@@ -14,37 +14,66 @@ body {
 
 
 
-.selectMenu select {
+.mediaControls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.mediaButton {
+  margin-left: 4px;
+}
+
+.selectMenu {
+  margin-top: 7px;
+
+}
+
+.selectMenu S{
   font-family: 'Roboto Mono', monospace;
   font-size: 15px;
   padding: 10px;
   margin: 10px;
   border-radius: 5px;
-  background-color: #adadaf;
+  background-color: #242527;
+  color: white;
+  width: 200px;
 }
 
 .modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 1050;
   background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1050;
   padding: 20px;
   border-radius: 8px;
+  /* Limit the size of the modal */
+  width: auto;
+  max-width: 600px; /* or any other max-width */
+  max-height: 80vh; /* or any other max-height */
+  overflow: auto; /* for scrollbars if the content is larger than the modal */
+  margin-left: 120px;
 }
 
 .modal img {
-  width: auto;
-  max-width: 90%;
-  max-height: 80vh;
+  max-width: 100%;  /* ensures the image does not exceed the modal's width */
+  max-height: 70vh; /* ensures the image does not exceed the modal's height */
+  object-fit: contain; /* ensures the image maintains aspect ratio */
 }
 
 .modal button {
-  display: block;
-  margin: 10px auto;
   padding: 5px 20px;
+  margin-top: 10px;
 }
+
 
 
 
@@ -81,14 +110,26 @@ body {
 
 .nav-item {
   display: flex;
-  align-items: center; /* Vertically center the items */
-
+  align-items: center;
 }
 
 .nav-item span {
   margin-left: 8px; /* Add some spacing between icon and text */
   font-size: 17px;
 }
+
+.explore {
+  display: flex;
+  align-items: center;
+}
+
+.explore h3 {
+  margin-left: 8px;
+  font-size: 20px;
+}
+
+
+
 
 
 .content {

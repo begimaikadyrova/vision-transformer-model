@@ -8,12 +8,14 @@ import { BsFillDiagram2Fill } from "react-icons/bs";
 import { VscServerProcess } from "react-icons/vsc";
 import { LiaHomeSolid } from "react-icons/lia";
 
+import { TbPhotoSearch } from "react-icons/tb";
+
 
 
 function Training() {
   const initialized = useRef(false);
   const [layerData, setLayerData] = useState([]);
-  const [selectedLayer, setSelectedLayer] = useState('');
+  const [selectedLayer, setSelectedLayer] = useState(null);
   const [position, setPosition] = useState(0);
   const [mediaInterval, setMediaInterval] = useState(null);
   const [showPictures, setShowPictures] = useState(false);
@@ -32,24 +34,55 @@ function Training() {
           return response.json();
         })
         .then(data => {
-          const layersWithImages = Object.entries(data.layer_weights).reduce((acc, [key, values]) => {
+          let layersWithImages = [];
+        
+          Object.entries(data.layer_weights).forEach(([key, values]) => {
             if (values.length > 0) {
-              const images = values.map(value => ({
-                label: value,
-                urls: Array.from({ length: 176 }, (_, i) => `http://localhost:5000/get_image/${value.replace(/\//g, '_')}_${i}`)
-              }));
-  
-              acc.push({
-                id: key,
-                images: images // Now includes all images, e.g., both kernel and bias for each layer
-              });
+              if (key === 'multi_head_attention') {
+                const suffixes = ['attention_output', 'key', 'query', 'value'];
+                suffixes.forEach(suffix => {
+                  // Only add specific suffixes with 'kernel' and 'bias' for 'value'
+                  if (suffix === 'value') {
+                    const valueImages = ['kernel', 'bias'].map(subKey => ({
+                      label: `${key}/${suffix}/${subKey}`,
+                      urls: Array.from({ length: 176 }, (_, i) => `http://localhost:5000/get_image/${key}_${suffix}_${subKey}_${i}`)
+                    }));
+                    layersWithImages.push({
+                      id: `${key}_${suffix}`,
+                      images: valueImages
+                    });
+                  } else {
+                    const images = [{
+                      label: `${key}/${suffix}`,
+                      urls: Array.from({ length: 176 }, (_, i) => `http://localhost:5000/get_image/${key}_${suffix}_${i}`)
+                    }];
+                    layersWithImages.push({
+                      id: `${key}_${suffix}`,
+                      images: images
+                    });
+                  }
+                });
+              } else {
+                const images = values.map(value => ({
+                  label: value,
+                  urls: Array.from({ length: 176 }, (_, i) => `http://localhost:5000/get_image/${value.replace(/\//g, '_')}_${i}`)
+                }));
+                layersWithImages.push({
+                  id: key,
+                  images: images
+                });
+              }
             }
-            return acc;
-          }, []);
-  
-          setLayerData(layersWithImages);
+          });
+        
+          setLayerData(layersWithImages.map(layer => ({
+            value: layer.id,
+            label: layer.id, 
+            images: layer.images
+          })));
+        
           if (layersWithImages.length > 0) {
-            setSelectedLayer(layersWithImages[0].id);
+            setSelectedLayer({ value: layersWithImages[0].id, label: layersWithImages[0].id.replace(/_/g, ' ') });
           }
         })
         .catch(error => {
@@ -63,6 +96,7 @@ function Training() {
       }
     };
   }, [mediaInterval]);
+  
 
   const openModal = (url) => {
     setSelectedImage(url);
@@ -111,10 +145,16 @@ function Training() {
     setPosition(175);
   };
 
-  const handleLayerChange = (event) => {
-    setSelectedLayer(event.target.value);
-    setPosition(0);
+  const handleLayerChange = selectedOption => {
+    setSelectedLayer(selectedOption);
+    setPosition(0); // Reset position to 0
+    setShowPictures(false); // Ensure pictures aren't shown until explicitly started
+    if (mediaInterval) { // Check if there's an active interval and clear it
+      clearInterval(mediaInterval);
+      setMediaInterval(null); // Reset the interval state
+    }
   };
+  
 
   return (
     <div className="App">
@@ -154,51 +194,110 @@ function Training() {
       </div>
       <div className="content">
         <h1>Training</h1>
-        <p>Explore how the model learns over time and adjusts its parameters accordingly.</p>
-        <p>Choose a layer to see how the model's weights change over time.</p>
+        <div className='explore'>
+        <TbPhotoSearch size={29} />   <h3> Explore how the model learns over time and adjusts its parameters accordingly</h3>
+
+        </div>
+        <p style={{fontSize: "17px"}}>Choose a <strong>LAYER</strong> to see how the model's weights change over the time</p>
         <div className='selectMenu'>
-        <select className="select-box" value={selectedLayer} onChange={handleLayerChange}>
-        {layerData.map(layer => (
-        <option key={layer.id} value={layer.id}>{layer.id}</option>
-        ))}
-        </select>
+          <Select placeholder="Please, select a layer"
+            className="select-box"
+            value={selectedLayer}
+            onChange={handleLayerChange}
+            options={layerData}
+            styles={{
+              menuList: (provided) => ({
+                ...provided,
+                // Remove scrollbar by changing overflow property and possibly adjusting the max height
+                maxHeight: 'none', // You can adjust this as needed
+                overflow: 'visible',
+                
+                paddingTop: 0,
+                paddingBottom: 0
+              }),          
+              menu: (provided) => ({
+                ...provided,
+                
+                marginTop: 3,  // Remove any space between the control and the menu
+                borderRadius: 0,  // Match border radius with the select input field if necessary
+              }),
+              control: (base, state) => ({
+                ...base,
+                backgroundColor: "#242527",
+                width: 260,
+                borderRadius: 0,  // Match border radius with the select input field if necessary
+                height: 45,
+                color: "white",
+                borderColor: state.isFocused ? '#f0f0f034' : 'grey', // Change border color to purple when focused
+                boxShadow: state.isFocused ? '0 0 0 1px #f0f0f034' : 'none',
+                '&:hover': {
+                  borderColor: 'darkgrey' // Установка фиолетового цвета рамки при наведении
+               }
+              }),
+              option: (styles, { isFocused, isSelected }) => {
+                return {
+                  ...styles,
+                  height: 45,
+                  margin: 0,
+                  backgroundColor: isSelected ? 'darkgray' : isFocused ? 'lightgray' : undefined,
+                  color: 'black',  // Set font color to white in the options
+                };
+              },
+              singleValue: (base) => ({
+                ...base,
+                color: 'white',
+              }),
+              placeholder: (base) => ({
+                ...base,
+                color: 'white',  // Font color of placeholder
+              }),
+              noOptionsMessage: (base) => ({
+                ...base,
+                // Ensuring "No options" has the same height and styling as other options
+                height: 45, // Match the custom option height
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'black', // And any other styles you've set for your options
+              }),
+            }}
+            noOptionsMessage={() => "Layers are loading..."}
+          />
         </div>
 
-
-        <p>Click on the play button to see the model's weights change over time.</p>
-        <p>Click on the pause button to stop the animation.</p>
-        <p>Click on the stop button to reset the animation.</p>
-        <p>Click on the jump to begin button to go to the first image.</p>
-        <p>Click on the jump to end button to go to the last image.</p>
-        <p>Click on the image to see a larger version.</p>
-        <p>Click on the label to see the image's description.</p>
-
-      
-        <div>
-          <button disabled={mediaInterval !== null} onClick={onPlay}>⏵</button>
-          <button disabled={mediaInterval === null} onClick={onPause}>⏸</button>
-          <button onClick={onJumpToBegin}>⏮</button>
-          <button onClick={onJumpToEnd}>⏭</button>
-          <button onClick={onStop}>⏹</button>
+        {selectedLayer && (
+        <div className='mediaControls'>
+          <button className='mediaButton' disabled={mediaInterval !== null} onClick={onPlay} title="Click on the play button to see the model's weights change over time">⏵</button>
+          <button className='mediaButton' disabled={mediaInterval === null} onClick={onPause} title="Click on the pause button to stop the animation">⏸</button>
+          <button className='mediaButton' onClick={onJumpToBegin} title="Click on the jump to begin button to go to the first image">⏮</button>
+          <button className='mediaButton' onClick={onStop}>⏹</button>
+          <button className='mediaButton' onClick={onJumpToEnd} title="Click on the jump to end button to go to the last image">⏭</button>
         </div>
+        )}
+        {/* <p>Click on the label to see the image's description.</p> */}
+        {showPictures && (
+        <p>You can click on the image to see an original version</p>
+      )}
         {showPictures && (
           <div className="layerContainer">
-            <h2>{selectedLayer}</h2>
+            <h2>Layer: {selectedLayer?.label}</h2>
             <div className="imagesContainer">
-              {layerData.find(layer => layer.id === selectedLayer)?.images.map((image, index) => (
+            {layerData.find(layer => layer.value === selectedLayer?.value)?.images.map((image, index) => (
                 <div className="imagesContainer" key={index}>
-                  <img src={image.urls[position]} alt={`${selectedLayer} Image ${position + 1} ${image.label}`}
+                  <img src={image.urls[position]} alt={`${selectedLayer.label} Image ${position + 1} ${image.label}`}
                        onClick={() => openModal(image.urls[position])} />
                   <p>{image.label}</p>
                 </div>
               ))}
             </div>
           </div>
-        )}
+        )} 
+        
+
       </div>
       {isModalOpen && (
         <div className="modal" onClick={closeModal}>
-          <img src={selectedImage} alt="Enlarged model weight" />
+          <img src={selectedImage} alt="Original model weight" />
           <button onClick={closeModal}>Close</button>
         </div>
       )}

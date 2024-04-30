@@ -3,7 +3,6 @@
 from flask import Flask, send_file, jsonify, make_response
 from flask_cors import CORS
 from base64 import b64encode
-from matplotlib import streamplot
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import io
