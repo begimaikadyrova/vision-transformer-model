@@ -46,22 +46,37 @@ function HomePage() {
       </div>
       <div className="homecontent">
         <h1>Explore Vision Transformer</h1>
-        <div className='centered-text'>
-        <p>Welcome to the Vision Transformer (ViT) visualization tool! This website is designed to help users understand how ViT models, 
-          particularly their attention layers, process images to make complex decisions. 
-        By exploring this step-by-step process of a Vision Transformer model as it interprets different parts of an image using the mechanism of attention. 
-        This educational platform is tailored for students, researchers, and practitioners in computer vision.</p>
-        <br></br>
-        <p>Start by selecting an image data source from the "Patches" section to see how the ViT breaks down the image into manageable pieces. 
-          Progress to the "Training" section to understand how the model learns over time and adjusts its parameters accordingly. 
-          The "Graph" section illustrates the dynamic flow of attention across different image segments, helping to visualize the computational thinking of the ViT. 
-          Finally, the "Process" section allows you to monitor the overall performance and improvements of the model through various iterations.</p>
-          <br></br>
-        <p>This hands-on approach not only demystifies the complexity of Vision Transformers but also enhances your ability to 
-          manipulate and improve these models for more effective applications in real-world scenarios.</p>
+        <div className="left-text">
+          <div className="block-section">
+            <section className="section">
+              <h2>About ViT Visualizer</h2>
+              <p style={{fontSize: "18px"}}><i>Welcome to the Vision Transformer visualization tool!</i></p>
+                <p>This website is designed to help users understand how ViT models process images to make complex decisions.</p>
+            </section>
+            <div className="section-block">
+              <h2>Explore Step-by-Step</h2>
+              <p>
+                <li><b>Patches</b> section shows how the ViT breaks down the image into manageable pieces.</li>
+                <li><b>Training</b> section helps to understand how the model learns over time and adjusts its parameters accordingly.</li>
+              </p>
+            </div>
+            <div className="section-block">
+              <h2>Dynamic Visualization</h2>
+              <p>
+                <li><b>Graph</b> section illustrates the dynamic flow of attention across different image segments, helping to visualize the computational thinking of the ViT.</li>
+                <li><b>Process</b> section allows you to monitor the overall performance and improvements of the model through various iterations.</li>
+              </p>
+            </div>
+            <section className="section" style={{ marginBottom: '50px' }}>
+              <h2>Hands-on Learning</h2>
+              <p>
+                This hands-on approach not only demystifies the complexity of Vision Transformers but also enhances your ability to manipulate and improve these models for more effective applications in real-world scenarios.
+              </p>
+            </section>
+          </div>
         </div>
       </div>
-   </div>
+    </div>
   );
 }
 
