@@ -8,7 +8,6 @@ import { BsFillDiagram2Fill } from "react-icons/bs";
 import { VscServerProcess } from "react-icons/vsc";
 import { LiaHomeSolid } from "react-icons/lia";
 
-import { TbPhotoSearch } from "react-icons/tb";
 
 
 
@@ -195,10 +194,10 @@ function Training() {
       <div className="content">
         <h1>Training</h1>
         <div className='explore'>
-        <TbPhotoSearch size={29} />   <h3> Explore how the model learns over time and adjusts its parameters accordingly</h3>
+        <h3> Explore how the model learns over time and adjusts its parameters accordingly</h3> 
 
         </div>
-        <p style={{fontSize: "17px"}}>Choose a <strong>LAYER</strong> to see how the model's weights change over the time</p>
+        <p style={{fontSize: "17px"}}>Please, choose a <i><strong>layer</strong></i> to see how the model's weights change over the time</p>
         <div className='selectMenu'>
           <Select placeholder="Please, select a layer"
             className="select-box"
@@ -217,14 +216,13 @@ function Training() {
               }),          
               menu: (provided) => ({
                 ...provided,
-                
                 marginTop: 3,  // Remove any space between the control and the menu
                 borderRadius: 0,  // Match border radius with the select input field if necessary
               }),
               control: (base, state) => ({
                 ...base,
                 backgroundColor: "#242527",
-                width: 260,
+                width: 346,
                 borderRadius: 0,  // Match border radius with the select input field if necessary
                 height: 45,
                 color: "white",
@@ -263,7 +261,10 @@ function Training() {
             }}
             noOptionsMessage={() => "Layers are loading..."}
           />
+
         </div>
+
+
 
         {selectedLayer && (
         <div className='mediaControls'>
