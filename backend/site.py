@@ -1,6 +1,6 @@
 #pip install -U flask
 
-from flask import Flask, send_file, jsonify, make_response
+from flask import Flask, request, send_file, jsonify, make_response
 from flask_cors import CORS
 from base64 import b64encode
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -14,6 +14,22 @@ CORS(app)
 
 # def main():
 #   app.run()
+
+
+# logs = []
+
+# @app.route('/update_logs', methods=['POST'])
+# def update_logs():
+#     log_message = request.json['log']
+#     logs.append(log_message)
+#     return jsonify({"status": "Log added", "log": log_message})
+
+# @app.route('/get_logs', methods=['GET'])
+# def get_logs():
+#     return jsonify(logs)
+
+
+
 
 @app.route("/")
 def start_page():
@@ -44,7 +60,7 @@ def patches():
 
 @app.route("/get_graph_image", methods=['GET'])
 def graph_route():
-    return send_file("graphs/graph11.png", mimetype="image/png")
+    return send_file("graphs/graph21.png", mimetype="image/png")
 
 @app.route("/graph", methods=['GET'])
 def get_graph():
@@ -56,6 +72,8 @@ def get_graph():
         "layer_weights": layer_weights
     }
     return jsonify(response)
+
+
 
 
 

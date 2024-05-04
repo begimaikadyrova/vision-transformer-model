@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import Select from 'react-select';
 import { Link } from 'react-router-dom';
 import './App.css';
-import { TfiLayoutGrid3Alt } from "react-icons/tfi";
-import { MdDisplaySettings } from "react-icons/md";
-import { BsFillDiagram2Fill } from "react-icons/bs";
-import { VscServerProcess } from "react-icons/vsc";
-import { LiaHomeSolid } from "react-icons/lia";
+import { TbPhotoSearch } from "react-icons/tb";
+import { BsFillQuestionCircleFill } from "react-icons/bs";
+import { IoAppsSharp } from "react-icons/io5";
+import { FaRegChartBar } from "react-icons/fa";
+import { BsDiagram3Fill } from "react-icons/bs";
+import { VscTerminal } from "react-icons/vsc";
 
 
 
@@ -41,7 +42,7 @@ function Training() {
                 const suffixes = ['attention_output', 'key', 'query', 'value'];
                 suffixes.forEach(suffix => {
                   // Only add specific suffixes with 'kernel' and 'bias' for 'value'
-                  if (suffix === 'value') {
+                  if (suffix) {
                     const valueImages = ['kernel', 'bias'].map(subKey => ({
                       label: `${key}/${suffix}/${subKey}`,
                       urls: Array.from({ length: 176 }, (_, i) => `http://localhost:5000/get_image/${key}_${suffix}_${subKey}_${i}`)
@@ -158,38 +159,46 @@ function Training() {
   return (
     <div className="App">
       <div className="sidebar">
-        <nav>
-        <Link to="/">
-            <span className="nav-item">
-            <LiaHomeSolid />
-              <span>Main</span>
+        <nav className="nav-main">
+        <span className="nav-title">
+        <TbPhotoSearch size={19}/>
+              <span><b>Vision Transformer</b></span>
             </span>
-          </Link>
+            <div className="nav-divider"></div>
+          
           <Link to="/patches">
             <span className="nav-item">
-              <TfiLayoutGrid3Alt />
-              <span>Patches</span>
+              <IoAppsSharp size={18} />
+              <span >Patches</span>
             </span>
           </Link>
           <Link to="/training">
             <span className="nav-item">
-              <MdDisplaySettings />
+            <FaRegChartBar size={19}/>
               <span>Training</span>
             </span>
           </Link>
           <Link to="/graph">
             <span className="nav-item">
-              <BsFillDiagram2Fill />
+              <BsDiagram3Fill size={19}/>
               <span>Graph</span>
             </span>
           </Link>
           <Link to="/progress">
             <span className="nav-item">
-              <VscServerProcess />
+              <VscTerminal size={19}/>
               <span>Process</span>
             </span>
           </Link>
-        </nav>
+          </nav>
+          <div className="nav-footer">
+          <Link to="/">
+            <span className="nav-item">
+              <BsFillQuestionCircleFill size={19}/>
+              <span>About Tool</span>
+            </span>
+          </Link>
+        </div>
       </div>
       <div className="content">
         <h1>Training</h1>
@@ -221,7 +230,7 @@ function Training() {
               }),
               control: (base, state) => ({
                 ...base,
-                backgroundColor: "#242527",
+                backgroundColor: "#181c24",
                 width: 346,
                 borderRadius: 0,  // Match border radius with the select input field if necessary
                 height: 45,

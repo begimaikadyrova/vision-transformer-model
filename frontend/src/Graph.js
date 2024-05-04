@@ -1,11 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './App.css';
-import { TfiLayoutGrid3Alt } from "react-icons/tfi";
-import { MdDisplaySettings } from "react-icons/md";
-import { BsFillDiagram2Fill } from "react-icons/bs";
-import { VscServerProcess } from "react-icons/vsc";
-import { LiaHomeSolid } from "react-icons/lia";
+import { TbPhotoSearch } from "react-icons/tb";
+import { BsFillQuestionCircleFill } from "react-icons/bs";
+import { IoAppsSharp } from "react-icons/io5";
+import { FaRegChartBar } from "react-icons/fa";
+import { BsDiagram3Fill } from "react-icons/bs";
+import { VscTerminal } from "react-icons/vsc";
+
 
 
 
@@ -13,38 +15,46 @@ function Graph() {
   return (
     <div className="App">
       <div className="sidebar">
-        <nav>
-        <Link to="/">
-            <span className="nav-item">
-            <LiaHomeSolid />
-              <span>Main</span>
+        <nav className="nav-main">
+        <span className="nav-title">
+        <TbPhotoSearch size={19}/>
+              <span><b>Vision Transformer</b></span>
             </span>
-          </Link>
+            <div className="nav-divider"></div>
+          
           <Link to="/patches">
             <span className="nav-item">
-              <TfiLayoutGrid3Alt />
-              <span>Patches</span>
+              <IoAppsSharp size={18} />
+              <span >Patches</span>
             </span>
           </Link>
           <Link to="/training">
             <span className="nav-item">
-              <MdDisplaySettings />
+            <FaRegChartBar size={19}/>
               <span>Training</span>
             </span>
           </Link>
           <Link to="/graph">
             <span className="nav-item">
-              <BsFillDiagram2Fill />
+              <BsDiagram3Fill size={19}/>
               <span>Graph</span>
             </span>
           </Link>
           <Link to="/progress">
             <span className="nav-item">
-              <VscServerProcess />
+              <VscTerminal size={19}/>
               <span>Process</span>
             </span>
           </Link>
-        </nav>
+          </nav>
+          <div className="nav-footer">
+          <Link to="/">
+            <span className="nav-item">
+              <BsFillQuestionCircleFill size={19}/>
+              <span>About Tool</span>
+            </span>
+          </Link>
+        </div>
       </div>
       <div className="content">
         <h1>Graph</h1>

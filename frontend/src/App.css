@@ -6,11 +6,25 @@
   display: flex;
   min-height: 100vh;
   font-family: 'Roboto Mono', monospace;
-  background-color: #f0f0f0; 
+  background-color: #e7ecf3; 
 }
 
 body {
   margin: 0;
+}
+
+
+.nav-divider {
+  width: 230px;
+  border-top: 1px solid #d3d3d3; 
+  opacity: 0.3;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.nav-about {
+  display: flex;
+  
 }
 
 
@@ -25,23 +39,14 @@ body {
 
 .mediaButton {
   margin-left: 4px;
+  font-size: 20px;
 }
 
 .selectMenu {
-  margin-top: 7px;
+  margin-top: 10px;
 
 }
 
-.selectMenu S{
-  font-family: 'Roboto Mono', monospace;
-  font-size: 15px;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 5px;
-  background-color: #242527;
-  color: white;
-  width: 200px;
-}
 
 .modal {
   display: flex;
@@ -80,31 +85,63 @@ body {
 
 
 .sidebar {
-  background-color: #242527;
-  color: white;
+  background-color: #181c24;
   width: 230px; /* Adjust the width as needed */
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   padding: 20px;
   position: fixed;
   height: 100vh;
 }
+
+.nav-main {
+  flex-grow: 1; /* Allow main nav to take up any free space */
+}
+
+
+.nav-footer {
+  margin-left: -20px;
+  margin-bottom: 20px;
+  width: 100%; /* ensures it fills the sidebar */
+  background-color: #161d27; /* match the sidebar background color */
+  border-top: 1px solid #333; /* optional, if you want a separator */
+  padding: 10px 20px; /* adjust padding as needed */
+}
+
+.nav-footer a {
+  margin-left: 12px;
+  flex-grow: 1; /* Allows <a> to fill the space for the hover effect */
+  display: flex;
+  align-items: center;
+  color: #99a1af;
+  text-decoration: none;
+  padding: 9px 0; /* Adjust padding to match other links */
+}
+
+.nav-footer:hover {
+  background-color: #374151; 
+}
+
+
+
+
 
 .sidebar nav {
   display: flex;
   flex-direction: column;
 }
 
-.sidebar a {
-  color: #adadaf;
+.sidebar .nav-main a {
+  color: #838a96;
   text-decoration: none;
   padding: 14px;
 }
 
-.sidebar a:hover {
-  color: white;
+.sidebar .nav-main a:hover {
+  color: #d1d4d9;
   padding: 14px;
-  background-color: #686c73;
+  background-color: #384454;
   cursor: pointer;
   border-radius: 5px;
 }
@@ -114,8 +151,24 @@ body {
   align-items: center;
 }
 
+.nav-title {
+  color: #bcc3ce;
+  display: flex;
+  align-items: center;
+  font-size: 17px;
+  margin-left: 13px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.nav-title span {
+  
+  margin-left: 10px; /* Add some spacing between icon and text */
+  font-size: 17px;
+}
+
 .nav-item span {
-  margin-left: 8px; /* Add some spacing between icon and text */
+  margin-left: 10px; /* Add some spacing between icon and text */
   font-size: 17px;
 }
 
@@ -134,16 +187,19 @@ body {
 
 
 .content {
+  color: #272d3a;
   flex-grow: 1;
   padding: 20px;
-  background-color: #f0f0f0; /* Light gray background for the content area */
+  background-color: #e7ecf3; /* Light gray background for the content area */
   display: flex;
   flex-direction: column;
   align-items: center; /* Center children horizontally */
   margin-left: 230px;
+
 }
 
 .homecontent {
+  color: #272d3a;
   display: flex;
   flex-direction: column;
   align-items: center; /* Center the content horizontally */
@@ -205,7 +261,7 @@ body {
 }
 
 .App-link {
-  color: #61dafb;
+  color: rgba(97, 218, 251, 0.384);
 }
 
 .homePageContainer {
@@ -262,30 +318,70 @@ body {
   font-family: 'Roboto Mono', monospace; 
 }
 
-.trainingContainer {
-  background-color: #333; 
-  color: white; 
-  height: auto; 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.hidebutton, .nextbutton {
+  font-size: 20px;
 }
 
-.trainingContainer p {
-  font-family: 'Roboto Mono', monospace; 
-   
+
+.button {
+	pointer-events: auto;
+	cursor: pointer;
+	background: white;
+	border: none;
+	padding: 1rem 2rem;
+	margin: 0;
+	font-size: 20px;
+	position: relative;
 }
 
-.trainingContainer h1 {
-  font-family: 'Roboto Mono', monospace; 
-  margin-top: 20px; 
-  text-align: center; 
-  width: 100%; 
+.button::before,
+.button::after {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
 }
 
-button {
-  font-size: 20px
+.button--pan {
+	font-weight: 700;
+	border: 2px solid #1d2535;
+	border-radius: 3rem;
+	overflow: hidden;
+	color: #fff;
 }
+
+.button--pan span {
+	position: relative;
+	mix-blend-mode: difference;
+}
+
+.button--pan::before {
+	content: '';
+	background: #1d2535;
+	transition: transform 0.3s cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+.button--pan:hover::before {
+	transform: translate3d(0,-100%,0);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .graphpic{
   margin-right: 110px;

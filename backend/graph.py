@@ -5,7 +5,7 @@ def gen_pydot_graph():
     factory, model, _, _, _, _ = ViT.get_factory_model() 
     g, rg, layer_weights = ViT.get_graph(factory, model) 
  
-    graph = pydot.Dot(graph_type='digraph', rankdir='TB', bgcolor='#f0f0f0', splines='ortho') 
+    graph = pydot.Dot(graph_type='digraph', rankdir='TB', bgcolor='#e7ecf3', splines='ortho') 
     visited = set() 
  
     node_style = { 
@@ -42,6 +42,6 @@ def gen_pydot_graph():
     make_graph(next(iter(g))) 
  
     # Try writing the graph to a PNG file 
-    graph.write_png('graphs/graph11.png') 
+    graph.write_png('graphs/graph21.png') 
  
 #gen_pydot_graph()
