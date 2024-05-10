@@ -318,10 +318,6 @@ body {
   font-family: 'Roboto Mono', monospace; 
 }
 
-.hidebutton, .nextbutton {
-  font-size: 20px;
-}
-
 
 .button {
 	pointer-events: auto;
@@ -343,31 +339,44 @@ body {
 	height: 100%;
 }
 
-.button--pan {
+.button--show {
 	font-weight: 700;
 	border: 2px solid #1d2535;
 	border-radius: 3rem;
 	overflow: hidden;
-	color: #fff;
+	color: white;
 }
 
-.button--pan span {
+.button--show span {
 	position: relative;
 	mix-blend-mode: difference;
 }
 
-.button--pan::before {
+.button--show::before {
 	content: '';
 	background: #1d2535;
 	transition: transform 0.3s cubic-bezier(0.7, 0, 0.2, 1);
 }
 
-.button--pan:hover::before {
+.button--show:hover::before {
 	transform: translate3d(0,-100%,0);
 }
 
+.centerContainer {
+  margin-top: 20px;
+}
 
+.centerParagraph {
+  margin-top: 250px;
+}
 
+.patchespage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
 
 
 

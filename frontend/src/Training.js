@@ -202,8 +202,8 @@ function Training() {
       </div>
       <div className="content">
         <h1>Training</h1>
-        <div className='explore'>
         <h3> Explore how the model learns over time and adjusts its parameters accordingly</h3> 
+        <div className='explore'>
 
         </div>
         <p style={{fontSize: "17px"}}>Please, choose a <i><strong>layer</strong></i> to see how the model's weights change over the time</p>
