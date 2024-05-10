@@ -294,7 +294,7 @@ function Training() {
             <div className="imagesContainer">
             {layerData.find(layer => layer.value === selectedLayer?.value)?.images.map((image, index) => (
                 <div className="imagesContainer" key={index}>
-                  <img src={image.urls[position]} alt={`${selectedLayer.label} Image ${position + 1} ${image.label}`}
+                  <img src={image.urls[position]} alt={`${selectedLayer.label} ${position + 1} ${image.label}`}
                        onClick={() => openModal(image.urls[position])} />
                   <p>{image.label}</p>
                 </div>
