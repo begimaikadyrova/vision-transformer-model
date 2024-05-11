@@ -1,8 +1,7 @@
 #pip install -U flask
 
-from flask import Flask, request, send_file, jsonify, make_response, Response, stream_with_context
+from flask import Flask, send_file, jsonify, make_response, Response, stream_with_context
 from flask_cors import CORS
-from threading import Thread
 import time
 from base64 import b64encode
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -10,6 +9,7 @@ from matplotlib.figure import Figure
 import io
 import ViT
 import sys
+from os import path
 
 
 
@@ -59,9 +59,15 @@ def plot_png(fig):
   return output.getvalue()
 
 
+
 @app.route('/get_image/<name>', methods=['GET'])
 def get_image(name):
-  return send_file("data/"+name + ".png", mimetype="image/png")
+    filepath = f"data/{name}.png"
+    if path.exists(filepath):
+        return send_file(filepath, mimetype="image/png")
+    else:
+        return "File not found", 404
+
 
 @app.route("/patches", methods=['GET'])
 def patches():

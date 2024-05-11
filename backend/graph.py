@@ -1,6 +1,10 @@
+import ViT
+import pydot
+import keras
+
+
 def gen_pydot_graph(): 
-    import pydot 
-    import ViT 
+    
  
     factory, model, _, _, _, _ = ViT.get_factory_model() 
     g, rg, layer_weights = ViT.get_graph(factory, model) 
@@ -45,3 +49,9 @@ def gen_pydot_graph():
     graph.write_png('graphs/graph21.png') 
  
 #gen_pydot_graph()
+
+def modelArchitecture():
+    _, model, _, _, _, _ = ViT.get_factory_model()
+    keras.utils.plot_model(model, to_file='graphs/modelbegi22.png', show_shapes=True, show_layer_names=True, rankdir='TB', expand_nested=True)
+
+modelArchitecture() 
