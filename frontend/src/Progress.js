@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './App.css';
 import { TbPhotoSearch } from "react-icons/tb";
@@ -11,40 +11,46 @@ import { VscTerminal } from "react-icons/vsc";
 function Progress() {
   const [consoleOutput, setConsoleOutput] = useState('');
   const [eventSource, setEventSource] = useState(null);
+  const [hasOutput, setHasOutput] = useState(false);
+  const consoleRef = useRef(null);
 
   const handleStart = () => {
-    if (!eventSource) {
-      const source = new EventSource('http://localhost:5000/run_test');
-      
-      source.onmessage = function(event) {
-        setConsoleOutput(prev => prev + '\n' + event.data);
-      };
+    if (eventSource) return;
 
-      source.onerror = function(event) {
-        console.error('EventSource failed:', event);
-        setConsoleOutput(prev => prev + '\nFailed to connect to server.');
-        source.close();
-        setEventSource(null);
-      };
+    const source = new EventSource('http://localhost:5000/run_test');
 
-      setEventSource(source);
-    }
-  };
+    source.onmessage = function(event) {
+      setHasOutput(true);
+      setConsoleOutput(prev => prev + '\n' + event.data);
+    };
 
-  const handleStop = () => {
-    if (eventSource) {
-      eventSource.close();
+    source.onerror = function(event) {
+      console.error('EventSource failed:', event);
+      setConsoleOutput(prev => prev + '\nFailed to connect to server.');
+      source.close();
       setEventSource(null);
-    }
+    };
+
+    setConsoleOutput(prev => {
+      const updatedOutput = prev.includes('Training has started...') ? prev : `${prev}\nTraining has started...`;
+      return updatedOutput;
+    });
+
+    setEventSource(source);
   };
 
   useEffect(() => {
-    return () => {
-      if (eventSource) {
-        eventSource.close();
-      }
-    };
-  }, [eventSource]);
+    const date = new Date();
+    const formattedDate = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+    const initialOutput = `Date: ${formattedDate}\n\nNo output yet...`;
+    setConsoleOutput(initialOutput);
+  }, []);
+
+  useEffect(() => {
+    if (consoleRef.current) {
+      consoleRef.current.scrollTop = consoleRef.current.scrollHeight;
+    }
+  }, [consoleOutput]);
 
   return (
     <div className="App">
@@ -77,7 +83,7 @@ function Progress() {
           <Link to="/progress">
             <span className="nav-item active">
               <VscTerminal size={19} />
-              <span>Progress</span>
+              <span>Process</span>
             </span>
           </Link>
         </nav>
@@ -93,10 +99,12 @@ function Progress() {
       <div className="content">
         <h1>ViT Training Logs</h1>
         <div style={{ marginBottom: '20px' }}>
-          <button onClick={handleStart} style={{ marginRight: '10px' }}>Start</button>
-          <button onClick={handleStop}>Stop</button>
+          <button onClick={handleStart} style={{ marginRight: '10px' }}>
+            Start Training
+          </button>
         </div>
         <div
+          ref={consoleRef}
           className="console"
           style={{
             backgroundColor: '#000',
@@ -106,10 +114,24 @@ function Progress() {
             whiteSpace: 'pre-wrap',
             width: '80%',
             height: '600px',
-            overflowY: 'scroll'
+            overflowY: 'scroll',
           }}
         >
-          {consoleOutput || "No output yet..."}
+          <div style={{ textAlign: 'center' }}>
+            {consoleOutput.split('\n')[0]}
+          </div>
+          <div style={{ textAlign: 'center', whiteSpace: 'pre-wrap' }}>
+            {'\n'}
+          </div>
+          {!hasOutput && !consoleOutput.includes('Training has started...') ? (
+            <div style={{ textAlign: 'center' }}>
+              No output yet...
+            </div>
+          ) : (
+            <div style={{ textAlign: 'left' }}>
+              {consoleOutput.split('\n').slice(1).join('\n')}
+            </div>
+          )}
         </div>
       </div>
     </div>

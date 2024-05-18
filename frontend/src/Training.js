@@ -41,7 +41,6 @@ function Training() {
               if (key === 'multi_head_attention') {
                 const suffixes = ['attention_output', 'key', 'query', 'value'];
                 suffixes.forEach(suffix => {
-                  // Only add specific suffixes with 'kernel' and 'bias' for 'value'
                   if (suffix) {
                     const valueImages = ['kernel', 'bias'].map(subKey => ({
                       label: `${key}/${suffix}/${subKey}`,
@@ -113,7 +112,7 @@ function Training() {
     if (!mediaInterval) {
       const newInterval = setInterval(() => {
         setPosition(prevPosition => {
-          if (prevPosition >= 175) { // max index of images
+          if (prevPosition >= 175) {
             clearInterval(newInterval);
             return prevPosition;
           }
@@ -147,11 +146,11 @@ function Training() {
 
   const handleLayerChange = selectedOption => {
     setSelectedLayer(selectedOption);
-    setPosition(0); // Reset position to 0
-    setShowPictures(false); // Ensure pictures aren't shown until explicitly started
-    if (mediaInterval) { // Check if there's an active interval and clear it
+    setPosition(0); 
+    setShowPictures(false);
+    if (mediaInterval) { 
       clearInterval(mediaInterval);
-      setMediaInterval(null); // Reset the interval state
+      setMediaInterval(null); 
     }
   };
   
@@ -216,8 +215,7 @@ function Training() {
             styles={{
               menuList: (provided) => ({
                 ...provided,
-                // Remove scrollbar by changing overflow property and possibly adjusting the max height
-                maxHeight: 'none', // You can adjust this as needed
+                maxHeight: 'none', 
                 overflow: 'visible',
                 
                 paddingTop: 0,
@@ -225,20 +223,20 @@ function Training() {
               }),          
               menu: (provided) => ({
                 ...provided,
-                marginTop: 3,  // Remove any space between the control and the menu
-                borderRadius: 0,  // Match border radius with the select input field if necessary
+                marginTop: 3,  
+                borderRadius: 0,  
               }),
               control: (base, state) => ({
                 ...base,
                 backgroundColor: "#181c24",
                 width: 346,
-                borderRadius: 0,  // Match border radius with the select input field if necessary
+                borderRadius: 0,  
                 height: 45,
                 color: "white",
-                borderColor: state.isFocused ? '#f0f0f034' : 'grey', // Change border color to purple when focused
+                borderColor: state.isFocused ? '#f0f0f034' : 'grey', 
                 boxShadow: state.isFocused ? '0 0 0 1px #f0f0f034' : 'none',
                 '&:hover': {
-                  borderColor: 'darkgrey' // Установка фиолетового цвета рамки при наведении
+                  borderColor: 'darkgrey' 
                }
               }),
               option: (styles, { isFocused, isSelected }) => {
@@ -247,7 +245,7 @@ function Training() {
                   height: 45,
                   margin: 0,
                   backgroundColor: isSelected ? 'darkgray' : isFocused ? 'lightgray' : undefined,
-                  color: 'black',  // Set font color to white in the options
+                  color: 'black', 
                 };
               },
               singleValue: (base) => ({
@@ -256,16 +254,15 @@ function Training() {
               }),
               placeholder: (base) => ({
                 ...base,
-                color: 'white',  // Font color of placeholder
+                color: 'white',  
               }),
               noOptionsMessage: (base) => ({
                 ...base,
-                // Ensuring "No options" has the same height and styling as other options
-                height: 45, // Match the custom option height
+                height: 45, 
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: 'black', // And any other styles you've set for your options
+                color: 'black', 
               }),
             }}
             noOptionsMessage={() => "Layers are loading..."}
@@ -284,7 +281,6 @@ function Training() {
           <button className='mediaButton' onClick={onJumpToEnd} title="Click on the jump to end button to go to the last image">⏭</button>
         </div>
         )}
-        {/* <p>Click on the label to see the image's description.</p> */}
         {showPictures && (
         <p>You can click on the image to see an original version</p>
       )}

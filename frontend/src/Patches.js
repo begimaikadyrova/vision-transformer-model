@@ -7,6 +7,7 @@ import { IoAppsSharp } from "react-icons/io5";
 import { FaRegChartBar } from "react-icons/fa";
 import { BsDiagram3Fill } from "react-icons/bs";
 import { VscTerminal } from "react-icons/vsc";
+import { FaArrowCircleRight } from "react-icons/fa";
 
 
 
@@ -126,21 +127,24 @@ function Patches() {
         )}
         {loading && (
           <div className='centerParagraph'>
-            <p style={{ fontSize: '18px' }}>Images are processing...</p>
+            <p style={{ fontSize: '18px' }}>Images are being processed, please wait a moment...</p>
           </div>
         )}
         {!loading && showImages && (
           <>
             <button className="button button--show" onClick={fetchImages} style={{ fontFamily: "'Roboto Mono', monospace", marginBottom: '10px', marginTop: '10px' }}>
-              <span>Next Images&gt;&gt;&gt;</span>
-              </button>
+              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}> Next Images
+                <FaArrowCircleRight size={22} style={{ marginLeft: '5px' }} />
+              </span>
+            </button>
+
             <div className="imagesContainer">
               {patchImages.map((src, index) => (
                 <img key={index} src={`data:image/png;base64,${src}`} alt={`Patch ${index}`} />
               ))}
             </div>
             {texts.map((text, index) => (
-              <p key={index} className="customFont">{text}</p>
+              <b><p key={index} className="customFont">{text}</p></b>
             ))}
           </>
         )}
