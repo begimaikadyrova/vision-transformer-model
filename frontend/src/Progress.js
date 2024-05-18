@@ -38,7 +38,6 @@ function Progress() {
     }
   };
 
-  // Clean up EventSource when the component is unmounted
   useEffect(() => {
     return () => {
       if (eventSource) {

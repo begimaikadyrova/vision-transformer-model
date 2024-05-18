@@ -18,6 +18,7 @@ function Patches() {
   const [loading, setLoading] = useState(false);
   const [showImages, setShowImages] = useState(false);
   const [showDescription, setShowDescription] = useState(true);
+  const [error, setError] = useState('');
 
   const fetchImages = () => {
     setLoading(true);
@@ -34,17 +35,18 @@ function Patches() {
         setPatchImages(data.images);
         setTexts(data.text);
         setLoading(false);
-        setShowImages(true);  // Only show images after they are loaded
+        setShowImages(true);  
+        setError('');
       })
       .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
         setLoading(false);
+        setError(`There was a problem with the fetch operation: ${error.message}`);
       });
   };
 
   const toggleImages = () => {
     setShowImages(!showImages);
-    setShowDescription(!showDescription); // Toggle the description visibility
+    setShowDescription(!showDescription);
   };
 
 
@@ -95,8 +97,12 @@ function Patches() {
           </Link>
         </div>
       </div>
+      
       <div className="content">
         <h1>Patches</h1>
+        {error && (
+        <div className='error-message'>{error}</div>
+      )}
         {showDescription && (
           <>
             <h3>Understanding Patches in Vision Transformers</h3>
