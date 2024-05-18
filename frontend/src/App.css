@@ -13,7 +13,6 @@ body {
   margin: 0;
 }
 
-
 .nav-divider {
   width: 230px;
   border-top: 1px solid #d3d3d3; 
@@ -26,8 +25,6 @@ body {
   display: flex;
   
 }
-
-
 
 .mediaControls {
   display: flex;
@@ -47,7 +44,6 @@ body {
 
 }
 
-
 .modal {
   display: flex;
   flex-direction: column;
@@ -61,18 +57,17 @@ body {
   z-index: 1050;
   padding: 20px;
   border-radius: 8px;
-  /* Limit the size of the modal */
   width: auto;
-  max-width: 600px; /* or any other max-width */
-  max-height: 80vh; /* or any other max-height */
-  overflow: auto; /* for scrollbars if the content is larger than the modal */
+  max-width: 600px; 
+  max-height: 80vh; 
+  overflow: auto;
   margin-left: 120px;
 }
 
 .modal img {
-  max-width: 100%;  /* ensures the image does not exceed the modal's width */
-  max-height: 70vh; /* ensures the image does not exceed the modal's height */
-  object-fit: contain; /* ensures the image maintains aspect ratio */
+  max-width: 100%; 
+  max-height: 70vh;
+  object-fit: contain; 
 }
 
 .modal button {
@@ -80,13 +75,9 @@ body {
   margin-top: 10px;
 }
 
-
-
-
-
 .sidebar {
   background-color: #181c24;
-  width: 230px; /* Adjust the width as needed */
+  width: 230px; 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -96,36 +87,31 @@ body {
 }
 
 .nav-main {
-  flex-grow: 1; /* Allow main nav to take up any free space */
+  flex-grow: 1; 
 }
-
 
 .nav-footer {
   margin-left: -20px;
   margin-bottom: 20px;
-  width: 100%; /* ensures it fills the sidebar */
-  background-color: #161d27; /* match the sidebar background color */
-  border-top: 1px solid #333; /* optional, if you want a separator */
-  padding: 10px 20px; /* adjust padding as needed */
+  width: 100%; 
+  background-color: #181c24; 
+  border-top: 1px solid #5c5b5b; 
+  padding: 10px 20px; 
 }
 
 .nav-footer a {
   margin-left: 12px;
-  flex-grow: 1; /* Allows <a> to fill the space for the hover effect */
+  flex-grow: 1;
   display: flex;
   align-items: center;
   color: #99a1af;
   text-decoration: none;
-  padding: 9px 0; /* Adjust padding to match other links */
+  padding: 9px 0;
 }
 
 .nav-footer:hover {
   background-color: #374151; 
 }
-
-
-
-
 
 .sidebar nav {
   display: flex;
@@ -163,12 +149,12 @@ body {
 
 .nav-title span {
   
-  margin-left: 10px; /* Add some spacing between icon and text */
+  margin-left: 10px; 
   font-size: 17px;
 }
 
 .nav-item span {
-  margin-left: 10px; /* Add some spacing between icon and text */
+  margin-left: 10px; 
   font-size: 17px;
 }
 
@@ -182,18 +168,14 @@ body {
   font-size: 20px;
 }
 
-
-
-
-
 .content {
   color: #272d3a;
   flex-grow: 1;
   padding: 20px;
-  background-color: #e7ecf3; /* Light gray background for the content area */
+  background-color: #e7ecf3; 
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center children horizontally */
+  align-items: center; 
   margin-left: 230px;
 
 }
@@ -202,16 +184,15 @@ body {
   color: #272d3a;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center the content horizontally */
-  justify-content: center; /* Center the content vertically */
+  align-items: center;
+  justify-content: center; 
   width: 100%;
   margin-left: 240px;
 }
 
-
 .left-text {
-  width: 80%; /* Adjust the width as needed */
-  max-width: 960px; /* Maximum width of the text block */
+  width: 80%; 
+  max-width: 960px; 
   margin-top: 20px;
 }
 
@@ -227,26 +208,16 @@ body {
 }
 
 .section-block {
-  background-color: #f9f9f9; /* Light grey background */
+  background-color: #f9f9f9; 
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  width: 100%; /* Use 100% of the container width */
+  width: 100%; 
   margin: 10px 0;
 }
 
 .section {
-  width: 100%; /* Full width of its container */
-}
-
-
-
-
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+  width: 100%; 
 }
 
 .App-header {
@@ -265,9 +236,9 @@ body {
 }
 
 .homePageContainer {
-  background-color: #333; /* Dark gray background */
-  color: white; /* White text color */
-  height: 100vh; /* Full viewport height */
+  background-color: #333; 
+  color: white; 
+  height: 100vh; 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -318,7 +289,6 @@ body {
   font-family: 'Roboto Mono', monospace; 
 }
 
-
 .button {
 	pointer-events: auto;
 	cursor: pointer;
@@ -330,8 +300,20 @@ body {
 	position: relative;
 }
 
+.button-train {
+	pointer-events: auto;
+	cursor: pointer;
+	background: white;
+	border: none;
+	padding: 1rem 1.5rem;
+	margin: 0;
+	font-size: 20px;
+	position: relative;
+}
+
 .button::before,
-.button::after {
+.button::after, .button-train::before,
+.button-train::after {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -378,28 +360,9 @@ body {
   margin-top: 20px;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .graphpic{
   margin-right: 110px;
-
 }
-
-
-
-
 
 @keyframes App-logo-spin {
   from {
@@ -407,5 +370,11 @@ body {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
   }
 }

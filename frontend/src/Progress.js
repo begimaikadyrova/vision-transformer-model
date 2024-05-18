@@ -11,7 +11,7 @@ import { VscTerminal } from "react-icons/vsc";
 function Progress() {
   const [consoleOutput, setConsoleOutput] = useState('');
   const [eventSource, setEventSource] = useState(null);
-  const [hasOutput, setHasOutput] = useState(false);
+  const [trainingStarted, setTrainingStarted] = useState(false);
   const consoleRef = useRef(null);
 
   const handleStart = () => {
@@ -20,7 +20,7 @@ function Progress() {
     const source = new EventSource('http://localhost:5000/run_test');
 
     source.onmessage = function(event) {
-      setHasOutput(true);
+      setTrainingStarted(true);
       setConsoleOutput(prev => prev + '\n' + event.data);
     };
 
@@ -31,11 +31,8 @@ function Progress() {
       setEventSource(null);
     };
 
-    setConsoleOutput(prev => {
-      const updatedOutput = prev.includes('Training has started...') ? prev : `${prev}\nTraining has started...`;
-      return updatedOutput;
-    });
-
+    setTrainingStarted(true);
+    setConsoleOutput(prev => prev.replace('No output yet...', '').trim());
     setEventSource(source);
   };
 
@@ -99,8 +96,8 @@ function Progress() {
       <div className="content">
         <h1>ViT Training Logs</h1>
         <div style={{ marginBottom: '20px' }}>
-          <button onClick={handleStart} style={{ marginRight: '10px' }}>
-            Start Training
+          <button className="button-train button--show" onClick={handleStart}>
+            <span>Start Training</span>
           </button>
         </div>
         <div
@@ -123,11 +120,16 @@ function Progress() {
           <div style={{ textAlign: 'center', whiteSpace: 'pre-wrap' }}>
             {'\n'}
           </div>
-          {!hasOutput && !consoleOutput.includes('Training has started...') ? (
+          {!trainingStarted ? (
             <div style={{ textAlign: 'center' }}>
               No output yet...
             </div>
           ) : (
+            <div style={{ textAlign: 'center', whiteSpace: 'pre-wrap' }}>
+              Training process has started...
+            </div>
+          )}
+          {trainingStarted && (
             <div style={{ textAlign: 'left' }}>
               {consoleOutput.split('\n').slice(1).join('\n')}
             </div>

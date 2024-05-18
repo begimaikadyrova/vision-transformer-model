@@ -121,7 +121,7 @@ function Patches() {
           </>
         )}
          {!loading && showImages && (
-          <button className="button button--show" onClick={toggleImages} style={{ fontFamily: "'Roboto Mono', monospace", marginBottom: '10px', marginTop: '10px' }}>
+          <button className="button button--show" onClick={toggleImages} style={{ marginBottom: '10px', marginTop: '10px' }}>
             <span>Hide Images</span>
           </button>
         )}
@@ -132,7 +132,7 @@ function Patches() {
         )}
         {!loading && showImages && (
           <>
-            <button className="button button--show" onClick={fetchImages} style={{ fontFamily: "'Roboto Mono', monospace", marginBottom: '10px', marginTop: '10px' }}>
+            <button className="button button--show" onClick={fetchImages} style={{ marginBottom: '10px', marginTop: '10px' }}>
               <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}> Next Images
                 <FaArrowCircleRight size={22} style={{ marginLeft: '5px' }} />
               </span>
@@ -150,7 +150,7 @@ function Patches() {
         )}
          {!showImages && !loading && (
           <div className="centerContainer">
-            <button className="button button--show" onClick={fetchImages} style={{ fontFamily: "'Roboto Mono', monospace"}}>
+            <button className="button button--show" onClick={fetchImages}>
               <span>Show Images</span>
             </button>
           </div>
