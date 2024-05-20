@@ -2,13 +2,12 @@
 
 from flask import Flask, send_file, jsonify, make_response, Response, stream_with_context
 from flask_cors import CORS
-import time
 from base64 import b64encode
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import io
 import ViT
-import sys
+import graph
 from os import path
 import multiprocessing as mp
 import os
@@ -94,7 +93,8 @@ def patches():
 
 @app.route("/get_graph_image", methods=['GET'])
 def graph_route():
-    return send_file("graphs/graph21.png", mimetype="image/png")
+    graph.gen_pydot_graph()
+    return send_file("graphs/graphvit.png", mimetype="image/png")
 
 @app.route("/graph", methods=['GET'])
 def get_graph():

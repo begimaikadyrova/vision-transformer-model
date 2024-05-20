@@ -45,7 +45,7 @@ def gen_pydot_graph():
  
     make_graph(next(iter(g))) 
 
-    graph.write_png('graphs/graph21.png') 
+    graph.write_png('graphs/graphvit.png') 
  
 #gen_pydot_graph()
 
@@ -53,4 +53,4 @@ def modelArchitecture():
     _, model, _, _, _, _ = ViT.get_factory_model()
     keras.utils.plot_model(model, to_file='graphs/modelbegi22.png', show_shapes=True, show_layer_names=True, rankdir='TB', expand_nested=True)
 
-modelArchitecture() 
+#modelArchitecture() 
