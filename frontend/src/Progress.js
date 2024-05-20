@@ -96,7 +96,7 @@ function Progress() {
       <div className="content">
         <h1>ViT Training Logs</h1>
         <div style={{ marginBottom: '20px' }}>
-          <button className="button-train button--show" onClick={handleStart}>
+          <button className="button-train button--show" onClick={handleStart} >
             <span>Start Training</span>
           </button>
         </div>

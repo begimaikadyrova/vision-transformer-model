@@ -4,6 +4,7 @@
 #this code is based upon the public Keras example from:
 #https://keras.io/examples/vision/image_classification_with_vision_transformer/
 
+import io
 import os, tempfile
 import keras
 from keras import layers
@@ -14,9 +15,8 @@ import matplotlib.pyplot as plt
 
 
 
-
-
 os.environ["KERAS_BACKEND"] = "tensorflow"  # @param ["tensorflow", "jax", "torch"]
+
 
 
 
@@ -200,7 +200,7 @@ def weights_to_images(model, batch):
         pass #grayscale: weight * 255.0 #or make this a red, green or blue component
         #convert_weight_to_image(weight)
         ###RGB: weight * 255.0 * 255.0 * 255.0 cast int32 reshape int8 (...,...,3)
-    assert False
+    # assert False
             
 
 class WeightsCheckpoint(keras.callbacks.Callback):
@@ -231,6 +231,8 @@ def run_experiment(factory, model, x_train, y_train, x_test, y_test):
         ],        
     )
 
+
+
     tempdir = tempfile.gettempdir()
     checkpoint_filepath = os.path.join(tempdir, "checkpoint.weights.h5")
     checkpoint_callback = keras.callbacks.ModelCheckpoint(
@@ -244,14 +246,15 @@ def run_experiment(factory, model, x_train, y_train, x_test, y_test):
     print(model.summary())
     #model.load_weights(os.path.join(tempdir, "all.0.weights.h5"))
     
-
+    #the steps_per_epoch and epochs parameters here
     history = model.fit(
         x=x_train,
         y=y_train,
         batch_size=factory.batch_size,
-        epochs=factory.num_epochs,
+        epochs=1,
+        steps_per_epoch=10,
         validation_split=0.1,
-        callbacks=[checkpoint_callback, WeightsCheckpoint(tempdir)],
+        callbacks=[checkpoint_callback, WeightsCheckpoint(tempdir)]
     )
 
     model.load_weights(checkpoint_filepath)
@@ -260,7 +263,25 @@ def run_experiment(factory, model, x_train, y_train, x_test, y_test):
     print(f"Test top 5 accuracy: {round(top_5_accuracy * 100, 2)}%")
 
     
-    #return history
+    return history
+
+# def plot_to_buffer(item, history):
+#     fig, ax = plt.subplots()
+#     ax.plot(history.history[item], label=item)
+#     ax.plot(history.history["val_" + item], label="val_" + item)
+#     ax.set_xlabel("Epochs")
+#     ax.set_ylabel(item)
+#     ax.set_title(f"Train and Validation {item} Over Epochs", fontsize=14)
+#     ax.legend()
+#     ax.grid()
+
+#     buf = io.BytesIO()
+#     plt.savefig(buf, format='png')
+#     plt.close(fig)
+#     buf.seek(0)
+#     return buf.getvalue()
+
+
 
 def plot_history(item, history):
     plt.plot(history.history[item], label=item)
@@ -336,6 +357,7 @@ def get_factory_model():
    
     
 def test_vit():
+    print("Building model...")
     factory, model, x_train, y_train, x_test, y_test = get_factory_model()
     
 
@@ -345,6 +367,12 @@ def test_vit():
 
 
 #test_vit()
+import sys
+    
+if __name__ == "__main__":
+   test_vit()
+    
+
 
 
 #save and load model

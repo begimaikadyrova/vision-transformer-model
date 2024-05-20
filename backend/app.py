@@ -10,6 +10,10 @@ import io
 import ViT
 import sys
 from os import path
+import multiprocessing as mp
+import tempfile
+import os
+import subprocess
 
 
 
@@ -17,32 +21,26 @@ from os import path
 app = Flask(__name__)
 CORS(app)
 
+
+
 @app.route('/run_test')
 def run_test():
     def generate():
-        output_stream = io.StringIO()  # Initialize a StringIO stream
-        old_stdout = sys.stdout
-        sys.stdout = output_stream  # Redirect stdout to the StringIO stream
+        env = os.environ.copy()
+        env["PYTHONIOENCODING"] = "utf-8" 
+        process = subprocess.Popen(["python", "ViT.py"], stdout=subprocess.PIPE, text=True, env=env)
+        while True:
+            chunk = process.stdout.read(256)
+            if not chunk:
+                break
+            yield f"data: {chunk}\n\n"
+            print(f"data: {chunk}")
 
-        try:
-            ViT.test_vit()  # Assuming this function prints output periodically
-            output_stream.seek(0)  # Move to the start of the stream
-
-            while True:
-                line = output_stream.readline()
-                if not line:
-                    break
-                yield f"data: {line}\n\n"
-                time.sleep(0.1)  # Adjust timing based on your needs
-
-        except Exception as e:
-            app.logger.error("Error during streaming: %s", str(e))
-            yield f"data: ERROR: {str(e)}\n\n"
-
-        finally:
-            sys.stdout = old_stdout  # Restore original stdout
+        process.wait()
 
     return Response(stream_with_context(generate()), mimetype='text/event-stream')
+
+
 
 
 
