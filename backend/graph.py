@@ -44,8 +44,7 @@ def gen_pydot_graph():
                 make_graph(edge) 
  
     make_graph(next(iter(g))) 
- 
-    # Try writing the graph to a PNG file 
+
     graph.write_png('graphs/graph21.png') 
  
 #gen_pydot_graph()

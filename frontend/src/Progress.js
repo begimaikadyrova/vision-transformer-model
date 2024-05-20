@@ -7,6 +7,15 @@ import { IoAppsSharp } from "react-icons/io5";
 import { FaRegChartBar } from "react-icons/fa";
 import { BsDiagram3Fill } from "react-icons/bs";
 import { VscTerminal } from "react-icons/vsc";
+import AnsiToHtml from 'ansi-to-html';
+
+const convert = new AnsiToHtml({
+  fg: '#000', 
+  bg: '#fff', 
+  newline: true, 
+  escapeXML: true, 
+  stream: false 
+});
 
 function Progress() {
   const [consoleOutput, setConsoleOutput] = useState('');
@@ -21,18 +30,18 @@ function Progress() {
 
     source.onmessage = function(event) {
       setTrainingStarted(true);
-      setConsoleOutput(prev => prev + '\n' + event.data);
+      const newOutput = convert.toHtml(event.data);
+      setConsoleOutput(prev => `${prev}<br />${newOutput}`);
     };
 
     source.onerror = function(event) {
       console.error('EventSource failed:', event);
-      setConsoleOutput(prev => prev + '\nFailed to connect to server.');
+      const newOutput = convert.toHtml('\nFailed to connect to server.');
+      setConsoleOutput(prev => `${prev}<br />${newOutput}`);
       source.close();
       setEventSource(null);
     };
 
-    setTrainingStarted(true);
-    setConsoleOutput(prev => prev.replace('No output yet...', '').trim());
     setEventSource(source);
   };
 
@@ -40,7 +49,7 @@ function Progress() {
     const date = new Date();
     const formattedDate = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
     const initialOutput = `Date: ${formattedDate}\n\nNo output yet...`;
-    setConsoleOutput(initialOutput);
+    setConsoleOutput(convert.toHtml(initialOutput));
   }, []);
 
   useEffect(() => {
@@ -94,7 +103,7 @@ function Progress() {
         </div>
       </div>
       <div className="content">
-        <h1>ViT Training Logs</h1>
+      <h1>ViT Training Logs</h1>
         <div style={{ marginBottom: '20px' }}>
           <button className="button-train button--show" onClick={handleStart} >
             <span>Start Training</span>
@@ -113,31 +122,12 @@ function Progress() {
             height: '600px',
             overflowY: 'scroll',
           }}
-        >
-          <div style={{ textAlign: 'center' }}>
-            {consoleOutput.split('\n')[0]}
-          </div>
-          <div style={{ textAlign: 'center', whiteSpace: 'pre-wrap' }}>
-            {'\n'}
-          </div>
-          {!trainingStarted ? (
-            <div style={{ textAlign: 'center' }}>
-              No output yet...
-            </div>
-          ) : (
-            <div style={{ textAlign: 'center', whiteSpace: 'pre-wrap' }}>
-              Training process has started...
-            </div>
-          )}
-          {trainingStarted && (
-            <div style={{ textAlign: 'left' }}>
-              {consoleOutput.split('\n').slice(1).join('\n')}
-            </div>
-          )}
-        </div>
+          dangerouslySetInnerHTML={{ __html: consoleOutput }} 
+        />
       </div>
     </div>
   );
 }
+
 
 export default Progress;

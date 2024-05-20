@@ -14,6 +14,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+def enable_ansi_support():
+    if os.name == 'nt':
+        import ctypes
+        kernel32 = ctypes.windll.kernel32
+        hStdOut = kernel32.GetStdHandle(-11)
+        mode = ctypes.c_ulong()
+        kernel32.GetConsoleMode(hStdOut, ctypes.byref(mode))
+        mode.value |= 4
+        kernel32.SetConsoleMode(hStdOut, mode)
+
+enable_ansi_support()
+
+
 
 os.environ["KERAS_BACKEND"] = "tensorflow"  # @param ["tensorflow", "jax", "torch"]
 
@@ -365,14 +378,8 @@ def test_vit():
     plot_history("loss", history)
     plot_history("top-5-accuracy", history)
 
-
-#test_vit()
-import sys
     
 if __name__ == "__main__":
    test_vit()
     
 
-
-
-#save and load model
