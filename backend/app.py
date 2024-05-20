@@ -13,17 +13,17 @@ import multiprocessing as mp
 import os
 import subprocess
 
-def enable_ansi_support():
-    if os.name == 'nt':
-        import ctypes
-        kernel32 = ctypes.windll.kernel32
-        hStdOut = kernel32.GetStdHandle(-11)
-        mode = ctypes.c_ulong()
-        kernel32.GetConsoleMode(hStdOut, ctypes.byref(mode))
-        mode.value |= 4 
-        kernel32.SetConsoleMode(hStdOut, mode)
+# def enable_ansi_support():
+#     if os.name == 'nt':
+#         import ctypes
+#         kernel32 = ctypes.windll.kernel32
+#         hStdOut = kernel32.GetStdHandle(-11)
+#         mode = ctypes.c_ulong()
+#         kernel32.GetConsoleMode(hStdOut, ctypes.byref(mode))
+#         mode.value |= 4 
+#         kernel32.SetConsoleMode(hStdOut, mode)
 
-enable_ansi_support()
+# enable_ansi_support()
 
 
 app = Flask(__name__)
@@ -33,12 +33,10 @@ CORS(app)
 os.environ['PYTHONIOENCODING'] = 'utf-8'
 
 
-from flask import Response, stream_with_context
-import subprocess
-
 @app.route('/run_test')
 def run_test():
     def generate():
+        yield "data: Training process has started...\n\n" 
         with subprocess.Popen(["python", "ViT.py"], stdout=subprocess.PIPE, bufsize=1, universal_newlines=True, encoding='utf-8') as process:
             for line in iter(process.stdout.readline, ''):
                 yield f"data: {line}\n\n"
@@ -46,6 +44,7 @@ def run_test():
             return_code = process.wait()
             if return_code:
                 raise subprocess.CalledProcessError(return_code, "python ViT.py")
+            yield "data: END_OF_STREAM\n\n"
 
     return Response(stream_with_context(generate()), mimetype='text/event-stream')
 

@@ -14,17 +14,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def enable_ansi_support():
-    if os.name == 'nt':
-        import ctypes
-        kernel32 = ctypes.windll.kernel32
-        hStdOut = kernel32.GetStdHandle(-11)
-        mode = ctypes.c_ulong()
-        kernel32.GetConsoleMode(hStdOut, ctypes.byref(mode))
-        mode.value |= 4
-        kernel32.SetConsoleMode(hStdOut, mode)
+# def enable_ansi_support():
+#     if os.name == 'nt':
+#         import ctypes
+#         kernel32 = ctypes.windll.kernel32
+#         hStdOut = kernel32.GetStdHandle(-11)
+#         mode = ctypes.c_ulong()
+#         kernel32.GetConsoleMode(hStdOut, ctypes.byref(mode))
+#         mode.value |= 4
+#         kernel32.SetConsoleMode(hStdOut, mode)
 
-enable_ansi_support()
+# enable_ansi_support()
 
 
 
@@ -370,7 +370,7 @@ def get_factory_model():
    
     
 def test_vit():
-    print("Building model...")
+    print("\nBuilding model...")
     factory, model, x_train, y_train, x_test, y_test = get_factory_model()
     
 

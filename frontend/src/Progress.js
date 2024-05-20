@@ -20,36 +20,53 @@ const convert = new AnsiToHtml({
 function Progress() {
   const [consoleOutput, setConsoleOutput] = useState('');
   const [eventSource, setEventSource] = useState(null);
-  const [trainingStarted, setTrainingStarted] = useState(false);
   const consoleRef = useRef(null);
 
   const handleStart = () => {
-    if (eventSource) return;
+    if (eventSource) {
+      console.log("Attempted to start a new connection while one already exists.");
+        return;
+    }
+    console.log("Starting new connection.");
+    setConsoleOutput(prev => prev.replace('\nNo output yet...', ''));
 
     const source = new EventSource('http://localhost:5000/run_test');
 
     source.onmessage = function(event) {
-      setTrainingStarted(true);
+      if (event.data === "END_OF_STREAM") {
+        source.close();
+        setEventSource(null);
+        setConsoleOutput(prev => `${prev}\nTraining process has ended.`);
+        return;
+      }
       const newOutput = convert.toHtml(event.data);
-      setConsoleOutput(prev => `${prev}<br />${newOutput}`);
+      setConsoleOutput(prev => `${prev}\n${newOutput}`);
     };
+    
 
+    
     source.onerror = function(event) {
-      console.error('EventSource failed:', event);
-      const newOutput = convert.toHtml('\nFailed to connect to server.');
-      setConsoleOutput(prev => `${prev}<br />${newOutput}`);
+      if (event.currentTarget.readyState === EventSource.CLOSED) {
+        console.log('Connection was closed normally.');
+      } else {
+        console.error('An error occurred.');
+        if (!eventSource) { 
+          setConsoleOutput(prev => `${prev}${convert.toHtml('Failed to connect to server. Please check the connection or server status.')}`);
+        }
+      }
       source.close();
       setEventSource(null);
     };
-
+  
     setEventSource(source);
   };
+
 
   useEffect(() => {
     const date = new Date();
     const formattedDate = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
-    const initialOutput = `Date: ${formattedDate}\n\nNo output yet...`;
-    setConsoleOutput(convert.toHtml(initialOutput));
+    const initialOutput = `<div style="text-align: center;">Date: ${formattedDate}</div>\n\nNo output yet...`;
+    setConsoleOutput(initialOutput);
   }, []);
 
   useEffect(() => {
