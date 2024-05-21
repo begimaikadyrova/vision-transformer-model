@@ -264,10 +264,10 @@ def run_experiment(factory, model, x_train, y_train, x_test, y_test):
         x=x_train,
         y=y_train,
         batch_size=factory.batch_size,
-        epochs=1,
+        epochs=3,
         steps_per_epoch=10,
         validation_split=0.1,
-        callbacks=[checkpoint_callback, WeightsCheckpoint(tempdir)]
+        callbacks=[checkpoint_callback, WeightsCheckpoint(tempdir)],
     )
 
     model.load_weights(checkpoint_filepath)
@@ -277,22 +277,6 @@ def run_experiment(factory, model, x_train, y_train, x_test, y_test):
 
     
     return history
-
-# def plot_to_buffer(item, history):
-#     fig, ax = plt.subplots()
-#     ax.plot(history.history[item], label=item)
-#     ax.plot(history.history["val_" + item], label="val_" + item)
-#     ax.set_xlabel("Epochs")
-#     ax.set_ylabel(item)
-#     ax.set_title(f"Train and Validation {item} Over Epochs", fontsize=14)
-#     ax.legend()
-#     ax.grid()
-
-#     buf = io.BytesIO()
-#     plt.savefig(buf, format='png')
-#     plt.close(fig)
-#     buf.seek(0)
-#     return buf.getvalue()
 
 
 

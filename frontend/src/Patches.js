@@ -101,12 +101,13 @@ function Patches() {
       
       <div className="content">
         <h1>Patches</h1>
+        <h3>Understanding Patches in Vision Transformers</h3>
         {error && (
         <div className='error-message'>{error}</div>
       )}
         {showDescription && (
           <>
-            <h3>Understanding Patches in Vision Transformers</h3>
+            
             <div className='patchespage'>
               <p>
                 The <b>Patches</b> section explains how Vision Transformers split images into small, manageable segments known as patches.
@@ -127,7 +128,7 @@ function Patches() {
         )}
         {loading && (
           <div className='centerParagraph'>
-            <p style={{ fontSize: '18px' }}>Images are being processed, please wait a moment...</p>
+            <p style={{ fontSize: '18px' }}>Images are being processed, please wait a moment...<img src="/loading-gif.gif" alt="Loading" style={{ width: '20px', height: '18px', marginLeft: '5px' }} /></p>
           </div>
         )}
         {!loading && showImages && (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './App.css';
 import { TbPhotoSearch } from "react-icons/tb";
@@ -12,6 +12,12 @@ import { VscTerminal } from "react-icons/vsc";
 
 
 function Graph() {
+  const [loading, setLoading] = useState(true);
+
+  const handleImageLoaded = () => {
+    setLoading(false);
+  };
+
   return (
     <div className="App">
       <div className="sidebar">
@@ -60,9 +66,15 @@ function Graph() {
         <h1>Graph</h1>
         <h2>Model Overview</h2>
         <div className='graphpic'>
-          <img src="http://localhost:5000/get_graph_image" alt="Graph" />
+          {loading ? (
+            <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginLeft: '110px'}}>
+            Please wait until the graph is generated...
+            <img src="/loading-gif.gif" alt="Loading" style={{ width: '20px', height: '18px', marginLeft: '5px' }} />
+          </p>
+          
+          ) : null}
+          <img src="http://localhost:5000/get_graph_image" alt="Graph" onLoad={handleImageLoaded} />
         </div>
-
       </div>
     </div>
   );
