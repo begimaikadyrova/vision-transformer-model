@@ -95,6 +95,10 @@ def graph_route():
     graph.gen_pydot_graph()
     return send_file("graphs/graphvit.png", mimetype="image/png")
 
+@app.route('/get_training_image')
+def get_training_image():
+    return send_file('top5_accuracy_results.png', mimetype='image/png')
+
 @app.route("/graph", methods=['GET'])
 def get_graph():
     factory, model, _, _, _, _ = ViT.get_factory_model()

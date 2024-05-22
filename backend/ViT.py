@@ -280,7 +280,7 @@ def run_experiment(factory, model, x_train, y_train, x_test, y_test):
 
 
 
-def plot_history(item, history):
+def plot_history(item, history, filename):
     plt.plot(history.history[item], label=item)
     plt.plot(history.history["val_" + item], label="val_" + item)
     plt.xlabel("Epochs")
@@ -288,7 +288,11 @@ def plot_history(item, history):
     plt.title("Train and Validation {} Over Epochs".format(item), fontsize=14)
     plt.legend()
     plt.grid()
+    plt.savefig(filename)
     plt.show()
+    plt.close()
+
+
 
 def only_patches():
   num_classes = 100
@@ -359,8 +363,10 @@ def test_vit():
     
 
     history = run_experiment(factory, model, x_train, y_train, x_test, y_test)
-    plot_history("loss", history)
-    plot_history("top-5-accuracy", history)
+    print(history.history.keys())
+    plot_history("loss", history, 'loss_results.png')
+    plot_history("top-5-accuracy", history, 'top5_accuracy_results.png')
+
 
     
 if __name__ == "__main__":

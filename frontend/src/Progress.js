@@ -20,6 +20,7 @@ const convert = new AnsiToHtml({
 function Progress() {
   const [consoleOutput, setConsoleOutput] = useState('');
   const [eventSource, setEventSource] = useState(null);
+  const [imageURL, setImageURL] = useState('');
   const consoleRef = useRef(null);
 
   const handleStart = () => {
@@ -37,6 +38,7 @@ function Progress() {
         source.close();
         setEventSource(null);
         setConsoleOutput(prev => `${prev}\nTraining process has ended.`);
+        setImageURL('http://localhost:5000/get_training_image');
         return;
       }
       const newOutput = convert.toHtml(event.data);
@@ -141,10 +143,14 @@ function Progress() {
           }}
           dangerouslySetInnerHTML={{ __html: consoleOutput }} 
         />
+      {imageURL && (
+          <div style={{ marginTop: '20px' }}>
+            <img src={imageURL} alt="Training Result" style={{ width: '80%' }} />
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
 
 export default Progress;

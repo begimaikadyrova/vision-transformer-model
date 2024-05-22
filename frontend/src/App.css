@@ -36,13 +36,18 @@ body {
 
 .mediaButton {
   margin-left: 4px;
-  font-size: 20px;
+  font-size: 21px;
+  color: #1d2535; 
+}
+
+.mediaButton:disabled {
+  cursor: not-allowed;
 }
 
 .selectMenu {
-  margin-top: 10px;
-
+  margin-top: 30px;
 }
+
 
 .modal {
   display: flex;
@@ -53,7 +58,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: lightgray;
   z-index: 1050;
   padding: 20px;
   border-radius: 8px;
@@ -71,8 +76,14 @@ body {
 }
 
 .modal button {
-  padding: 5px 20px;
-  margin-top: 10px;
+  display: block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #1d2535;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .sidebar {

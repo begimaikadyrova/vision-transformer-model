@@ -200,12 +200,15 @@ function Training() {
         </div>
       </div>
       <div className="content">
-        <h1>Training</h1>
-        <h3> Explore how the model learns over time and adjusts its parameters accordingly</h3> 
+      <h1>Training</h1>
+        <h3>Explore how the model learns over time and adjusts its parameters accordingly</h3>
+        <p><b>Dynamic Learning Visualization</b></p>
+        <p style={{marginLeft: '140px'}}>Experience the learning process of a Vision Transformer through interactive visualizations that showcase the model's progress. </p>
+        <p style={{marginLeft: '120px'}}>Select and explore different layers to understand their roles and see real-time changes in model parameters across various training epochs.</p>
         <div className='explore'>
 
         </div>
-        <p style={{fontSize: "17px"}}>Please, choose a <i><strong>layer</strong></i> to see how the model's weights change over the time</p>
+        <p style={{fontSize: "17px"}}>Please, choose a <i><strong>layer</strong></i> to see how the model's weights change over time</p>
         <div className='selectMenu'>
           <Select placeholder="Please, select a layer"
             className="select-box"
@@ -228,7 +231,7 @@ function Training() {
               }),
               control: (base, state) => ({
                 ...base,
-                backgroundColor: "#181c24",
+                backgroundColor: "#1d2535",
                 width: 346,
                 borderRadius: 0,  
                 height: 45,
@@ -274,11 +277,21 @@ function Training() {
 
         {selectedLayer && (
         <div className='mediaControls'>
-          <button className='mediaButton' disabled={mediaInterval !== null} onClick={onPlay} title="Click on the play button to see the model's weights change over time">⏵</button>
-          <button className='mediaButton' disabled={mediaInterval === null} onClick={onPause} title="Click on the pause button to stop the animation">⏸</button>
-          <button className='mediaButton' onClick={onJumpToBegin} title="Click on the jump to begin button to go to the first image">⏮</button>
-          <button className='mediaButton' onClick={onStop}>⏹</button>
-          <button className='mediaButton' onClick={onJumpToEnd} title="Click on the jump to end button to go to the last image">⏭</button>
+          <button className='mediaButton' disabled={mediaInterval !== null} onClick={onPlay} title="Click on the play button to see the model's weights change over time">
+          <span>⏵</span>
+          </button>
+          <button className='mediaButton' disabled={mediaInterval === null} onClick={onPause} title="Click on the pause button to stop the animation">
+          <span>⏸</span>
+          </button>
+          <button className='mediaButton' onClick={onJumpToBegin} title="Click on the jump to begin button to go to the first image">
+          <span>⏮</span>
+          </button>
+          <button className='mediaButton' onClick={onStop}>
+          <span>⏹</span>
+          </button>
+          <button className='mediaButton' onClick={onJumpToEnd} title="Click on the jump to end button to go to the last image">
+          <span>⏭</span>
+          </button>
         </div>
         )}
         {showPictures && (
