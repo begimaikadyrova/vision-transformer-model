@@ -101,7 +101,7 @@ function Patches() {
       
       <div className="content">
         <h1>Patches</h1>
-        <h3>Understanding Patches in Vision Transformers</h3>
+        <h3>Understanding Patches in Vision Transformer</h3>
         {error && (
         <div className='error-message'>{error}</div>
       )}

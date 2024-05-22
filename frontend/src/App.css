@@ -30,7 +30,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 25px;
   margin-bottom: 20px;
 }
 
@@ -45,7 +45,22 @@ body {
 }
 
 .selectMenu {
-  margin-top: 30px;
+  margin-top: 15px;
+}
+
+.centered-text {
+  text-align: center;
+  margin-left: 20px;
+  max-width: 1230px;
+  line-height: 1.7;
+}
+
+.imageWrapper {
+  margin: 10px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
 }
 
 
@@ -188,7 +203,9 @@ body {
   flex-direction: column;
   align-items: center; 
   margin-left: 230px;
-
+  min-height: 100vh;
+  width: calc(100% - 230px);
+  overflow: auto;
 }
 
 .homecontent {
