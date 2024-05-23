@@ -279,8 +279,8 @@ def run_experiment(factory, model, x_train, y_train, x_test, y_test):
     return history
 
 
-
 def plot_history(item, history, filename):
+    plt.figure()
     plt.plot(history.history[item], label=item)
     plt.plot(history.history["val_" + item], label="val_" + item)
     plt.xlabel("Epochs")
@@ -289,7 +289,7 @@ def plot_history(item, history, filename):
     plt.legend()
     plt.grid()
     plt.savefig(filename)
-    plt.show()
+    # plt.show()
     plt.close()
 
 
@@ -361,9 +361,9 @@ def test_vit():
     print("\nBuilding model...")
     factory, model, x_train, y_train, x_test, y_test = get_factory_model()
     
-
     history = run_experiment(factory, model, x_train, y_train, x_test, y_test)
-    print(history.history.keys())
+    # print(history.history.keys())
+    
     plot_history("loss", history, 'loss_results.png')
     plot_history("top-5-accuracy", history, 'top5_accuracy_results.png')
 

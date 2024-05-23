@@ -107,16 +107,14 @@ function Patches() {
       )}
         {showDescription && (
           <>
-            
             <div className='patchespage'>
-              <p>
-                The <b>Patches</b> section explains how Vision Transformers split images into small, manageable segments known as patches.
-              </p>
-              <p>
+              <p className="centered-text" style={{lineHeight: "2", marginTop: "0"}}>
+              Explore how Vision Transformers split images into small, manageable segments known as patches.
+              <br></br>
                 Each patch plays a crucial role in the model's understanding of the entire image.
-              </p>
-              <p>
-                <b>Click the button below</b> to explore how Vision Transformers preprocess visuals by breaking them into patches.
+                </p>
+
+              <p><b>Click on the button below</b> to view how Vision Transformers preprocess visuals by breaking them into patches.
               </p>
             </div>
           </>

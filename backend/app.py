@@ -4,7 +4,6 @@ from flask import Flask, send_file, jsonify, make_response, Response, stream_wit
 from flask_cors import CORS
 from base64 import b64encode
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
 import io
 import ViT
 import graph
@@ -95,9 +94,17 @@ def graph_route():
     graph.gen_pydot_graph()
     return send_file("graphs/graphvit.png", mimetype="image/png")
 
-@app.route('/get_training_image')
-def get_training_image():
-    return send_file('top5_accuracy_results.png', mimetype='image/png')
+@app.route('/get_training_images')
+def get_training_images():
+    files = ['loss_results.png', 'top5_accuracy_results.png']
+    response = []
+    for file in files:
+        filepath = f"{file}"
+        if path.exists(filepath):
+            with open(filepath, "rb") as image_file:
+                encoded_image = b64encode(image_file.read()).decode('ascii')
+                response.append(encoded_image)
+    return jsonify(response)
 
 @app.route("/graph", methods=['GET'])
 def get_graph():

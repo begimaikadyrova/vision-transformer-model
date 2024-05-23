@@ -20,7 +20,8 @@ const convert = new AnsiToHtml({
 function Progress() {
   const [consoleOutput, setConsoleOutput] = useState('');
   const [eventSource, setEventSource] = useState(null);
-  const [imageURL, setImageURL] = useState('');
+  const [imageURLs, setImageURLs] = useState([]);
+  const [showResults, setShowResults] = useState(false);
   const consoleRef = useRef(null);
 
   const handleStart = () => {
@@ -38,7 +39,7 @@ function Progress() {
         source.close();
         setEventSource(null);
         setConsoleOutput(prev => `${prev}\nTraining process has ended.`);
-        setImageURL('http://localhost:5000/get_training_image');
+        fetchImages()
         return;
       }
       const newOutput = convert.toHtml(event.data);
@@ -61,6 +62,19 @@ function Progress() {
     };
   
     setEventSource(source);
+  };
+
+  const fetchImages = () => {
+    fetch('http://localhost:5000/get_training_images')
+      .then(response => response.json())
+      .then(data => {
+        const urls = data.map(item => `data:image/png;base64,${item}`);
+        setImageURLs(urls);
+        setShowResults(true);
+      })
+      .catch(error => {
+        console.error('Error fetching images:', error);
+      });
   };
 
 
@@ -143,10 +157,34 @@ function Progress() {
           }}
           dangerouslySetInnerHTML={{ __html: consoleOutput }} 
         />
-      {imageURL && (
-          <div style={{ marginTop: '20px' }}>
-            <img src={imageURL} alt="Training Result" style={{ width: '80%' }} />
-          </div>
+        {showResults && (
+          <>
+            <h3 style={{ marginTop: '40px', marginBottom: '40px' }}>Training results</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '80%' }}>
+              {imageURLs.map((url, index) => (
+                url && (
+                  <div key={index} style={{ width: '49%' }}>
+                    <img src={url} alt={`Training Result ${index}`} style={{ width: '100%' }} />
+                    {index === 0 && (
+                      <ul style={{marginTop: '30px'}}>
+                        <li><b>Train Loss: </b>Indicates the loss on the training dataset, which usually decreases as the model learns.</li>
+                        <br></br>
+                        <br></br>
+                        <li><b>Validation Loss: </b>Indicates the validation dataset loss, helping monitor the model's generalization to unseen data. Ideally, validation loss should decrease similarly to training loss, suggesting the model isn't overfitting.</li>
+                      </ul>
+                    )}
+                    {index === 1 && (
+                      <ul style={{marginTop: '30px'}}>
+                        <li><b>Train Top-5 Accuracy: </b>Represents the model's top-5 accuracy on the training dataset. It generally increases as the model learns from the training data.</li>
+                        <br></br>
+                        <li><b>Validation Top-5 Accuracy: </b>Shows the top-5 accuracy on the validation dataset, indicating how well the model performs on unseen data. A similar upward trend to the train top-5 accuracy line suggests good generalization performance.</li>
+                      </ul>
+                    )}
+                  </div>
+                )
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>
