@@ -7,7 +7,7 @@ import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { IoAppsSharp } from "react-icons/io5";
 import { FaRegChartBar } from "react-icons/fa";
 import { BsDiagram3Fill } from "react-icons/bs";
-import { VscTerminal } from "react-icons/vsc";
+import { PiTerminalWindow } from "react-icons/pi";
 
 
 
@@ -185,7 +185,7 @@ function Training() {
           </Link>
           <Link to="/progress">
             <span className="nav-item">
-              <VscTerminal size={19}/>
+              <PiTerminalWindow size={21}/>
               <span>Process</span>
             </span>
           </Link>

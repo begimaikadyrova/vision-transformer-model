@@ -1,66 +1,76 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './App.css';
-import { TbPhotoSearch } from "react-icons/tb";
+import { BsWindowSidebar } from "react-icons/bs";
 import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { IoAppsSharp } from "react-icons/io5";
 import { FaRegChartBar } from "react-icons/fa";
 import { BsDiagram3Fill } from "react-icons/bs";
-import { VscTerminal } from "react-icons/vsc";
+import { PiTerminalWindow } from "react-icons/pi";
 
 function HomePage() {
+  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+
+  const toggleSidebar = () => {
+    setIsSidebarVisible(!isSidebarVisible);
+  };
+
   return (
     <div className="App">
-      <div className="sidebar">
+      <div className={`sidebar ${isSidebarVisible ? '' : 'sidebar-hidden'}`}>
         <nav className="nav-main">
-        <span className="nav-title">
-        <TbPhotoSearch size={19}/>
-              <span><b>Vision Transformer</b></span>
-            </span>
-            <div className="nav-divider"></div>
-          
+          <span className="nav-title" onClick={toggleSidebar} style={{ cursor: 'pointer' }}>
+          <BsWindowSidebar className="sidebar-icon" />
+            <span><b>Vision Transformer</b></span>
+          </span>
+          <div className="nav-divider"></div>
           <Link to="/patches">
             <span className="nav-item">
               <IoAppsSharp size={18} />
-              <span >Patches</span>
+              <span>Patches</span>
             </span>
           </Link>
           <Link to="/training">
             <span className="nav-item">
-            <FaRegChartBar size={19}/>
+              <FaRegChartBar size={19} />
               <span>Training</span>
             </span>
           </Link>
           <Link to="/graph">
             <span className="nav-item">
-              <BsDiagram3Fill size={19}/>
+              <BsDiagram3Fill size={19} />
               <span>Graph</span>
             </span>
           </Link>
           <Link to="/progress">
             <span className="nav-item">
-              <VscTerminal size={19}/>
+              <PiTerminalWindow size={21} />
               <span>Process</span>
             </span>
           </Link>
-          </nav>
-          <div className="nav-footer">
+        </nav>
+        <div className="nav-footer">
           <Link to="/">
             <span className="nav-item">
-              <BsFillQuestionCircleFill size={19}/>
+              <BsFillQuestionCircleFill size={19} />
               <span>About Tool</span>
             </span>
           </Link>
         </div>
       </div>
-      <div className="homecontent">
+      {!isSidebarVisible && (
+        <div className="nav-title nav-title-fixed" onClick={toggleSidebar}>
+          <BsWindowSidebar className="sidebar-icon" />
+        </div>
+      )}
+      <div className={`homecontent ${isSidebarVisible ? '' : 'homecontent-expanded'}`}>
         <h1>Explore Vision Transformer</h1>
         <div className="left-text">
           <div className="block-section">
             <section className="section">
               <h2>About ViT Visualizer</h2>
               <p style={{fontSize: "18px"}}><i>Welcome to the Vision Transformer visualization tool!</i></p>
-                <p>This website is designed to help users understand how ViT models process images to make complex decisions.</p>
+              <p>This website is designed to help users understand how ViT models process images to make complex decisions.</p>
             </section>
             <div className="section-block">
               <h2>Explore Step-by-Step</h2>
@@ -83,7 +93,7 @@ function HomePage() {
               </p>
             </section>
           </div>
-       </div>  
+       </div>
       </div>
     </div>
   );

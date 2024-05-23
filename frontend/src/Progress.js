@@ -6,7 +6,7 @@ import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { IoAppsSharp } from "react-icons/io5";
 import { FaRegChartBar } from "react-icons/fa";
 import { BsDiagram3Fill } from "react-icons/bs";
-import { VscTerminal } from "react-icons/vsc";
+import { PiTerminalWindow } from "react-icons/pi";
 import AnsiToHtml from 'ansi-to-html';
 
 const convert = new AnsiToHtml({
@@ -22,6 +22,7 @@ function Progress() {
   const [eventSource, setEventSource] = useState(null);
   const [imageURLs, setImageURLs] = useState([]);
   const [showResults, setShowResults] = useState(false);
+  const [isTraining, setIsTraining] = useState(false);
   const consoleRef = useRef(null);
 
   const handleStart = () => {
@@ -31,6 +32,9 @@ function Progress() {
     }
     console.log("Starting new connection.");
     setConsoleOutput(prev => prev.replace('\nNo output yet...', ''));
+    setImageURLs([]);
+    setShowResults(false);
+    setIsTraining(true);
 
     const source = new EventSource('http://localhost:5000/run_test');
 
@@ -39,7 +43,8 @@ function Progress() {
         source.close();
         setEventSource(null);
         setConsoleOutput(prev => `${prev}\nTraining process has ended.`);
-        fetchImages()
+        fetchImages();
+        setIsTraining(false);
         return;
       }
       const newOutput = convert.toHtml(event.data);
@@ -59,6 +64,7 @@ function Progress() {
       }
       source.close();
       setEventSource(null);
+      setIsTraining(false);
     };
   
     setEventSource(source);
@@ -121,7 +127,7 @@ function Progress() {
           </Link>
           <Link to="/progress">
             <span className="nav-item active">
-              <VscTerminal size={19} />
+              <PiTerminalWindow size={21} />
               <span>Process</span>
             </span>
           </Link>
@@ -138,8 +144,8 @@ function Progress() {
       <div className="content">
       <h1>ViT Training Logs</h1>
         <div style={{ marginBottom: '20px' }}>
-          <button className="button-train button--show" onClick={handleStart} >
-            <span>Start Training</span>
+          <button className="button-train button--show" onClick={handleStart} disabled={isTraining}>
+            <span>{isTraining ? 'Training in Progress...' : 'Start Training'}</span>
           </button>
         </div>
         <div

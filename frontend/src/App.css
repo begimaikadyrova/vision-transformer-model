@@ -103,17 +103,24 @@ body {
 
 .sidebar {
   background-color: #181c24;
-  width: 230px; 
+  width: 230px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 20px;
   position: fixed;
   height: 100vh;
+  left: 0;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-hidden {
+  transform: translateX(-100%);
 }
 
 .nav-main {
-  flex-grow: 1; 
+  flex-grow: 1;
+  color: white; 
 }
 
 .nav-footer {
@@ -151,7 +158,7 @@ body {
 }
 
 .sidebar .nav-main a:hover {
-  color: #d1d4d9;
+  color: white;
   padding: 14px;
   background-color: #384454;
   cursor: pointer;
@@ -173,8 +180,17 @@ body {
   padding-bottom: 10px;
 }
 
+
+
+.nav-title-fixed {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  cursor: pointer;
+}
+
+
 .nav-title span {
-  
   margin-left: 10px; 
   font-size: 17px;
 }
@@ -213,9 +229,14 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; 
+  justify-content: center;
   width: 100%;
-  margin-left: 240px;
+  margin-left: 230px;
+  transition: margin-left 0.3s ease;
+}
+
+.homecontent-expanded {
+  margin-left: 0;
 }
 
 .left-text {
@@ -297,10 +318,6 @@ body {
   font-size: 22px;
 }
 
-.homePageContainer a:hover {
-  color: #08a0b8; 
-  text-decoration: underline; 
-}
 
 .imagesContainer {
   display: flex;
@@ -389,7 +406,15 @@ body {
   margin-top: 20px;
 }
 
-.graphpic{
+.description {
+  margin-top: 40px;
+  line-height: 2;
+  margin-left: 40px;
+  text-align: center;
+}
+
+.graphpic {
+  margin-top: 40px;
   margin-right: 110px;
 }
 

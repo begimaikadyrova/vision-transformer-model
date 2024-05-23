@@ -6,7 +6,7 @@ import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { IoAppsSharp } from "react-icons/io5";
 import { FaRegChartBar } from "react-icons/fa";
 import { BsDiagram3Fill } from "react-icons/bs";
-import { VscTerminal } from "react-icons/vsc";
+import { PiTerminalWindow } from "react-icons/pi";
 
 
 
@@ -48,7 +48,7 @@ function Graph() {
           </Link>
           <Link to="/progress">
             <span className="nav-item">
-              <VscTerminal size={19}/>
+              <PiTerminalWindow size={21}/>
               <span>Process</span>
             </span>
           </Link>
@@ -64,14 +64,17 @@ function Graph() {
       </div>
       <div className="content">
         <h1>Graph</h1>
-        <h2>Model Overview</h2>
-        <div className='graphpic'>
+        <h2 style={{margin: '0'}}>Model Overview</h2>
+        <p className="description">
+          The graph visualization on this page is generated using the <code>pydot</code> library, which creates a directed graph of the model architecture. 
+          <br></br>This visualization aids in understanding the complex structure of the Vision Transformer model.
+        </p>
+        <div className="graphpic">
           {loading ? (
             <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginLeft: '110px'}}>
-            Please wait until the graph is generated...
-            <img src="/loading-gif.gif" alt="Loading" style={{ width: '20px', height: '18px', marginLeft: '5px' }} />
-          </p>
-          
+              Please wait until the graph is generated...
+              <img src="/loading-gif.gif" alt="Loading" style={{ width: '20px', height: '18px', marginLeft: '5px' }} />
+            </p>
           ) : null}
           <img src="http://localhost:5000/get_graph_image" alt="Graph" onLoad={handleImageLoaded} />
         </div>
