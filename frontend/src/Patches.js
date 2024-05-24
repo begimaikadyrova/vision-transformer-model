@@ -102,6 +102,13 @@ function Patches() {
       <div className="content">
         <h1>Patches</h1>
         <h3>Understanding Patches in Vision Transformer</h3>
+        <div> Choose a dataset: </div>
+        <select id='dataset'>
+            <option value={'cifar10'}>CIFAR10</option>
+            <option value={'cifar100'}>CIFAR100</option>
+            <option value={'mnistdigits'}>MNIST digits </option>
+            <option value={'fashoinmnist'}>Fashion MNIST</option>
+          </select>
         {error && (
         <div className='error-message'>{error}</div>
       )}

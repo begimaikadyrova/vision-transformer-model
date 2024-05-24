@@ -12,19 +12,7 @@ from keras import ops
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-
-
-# def enable_ansi_support():
-#     if os.name == 'nt':
-#         import ctypes
-#         kernel32 = ctypes.windll.kernel32
-#         hStdOut = kernel32.GetStdHandle(-11)
-#         mode = ctypes.c_ulong()
-#         kernel32.GetConsoleMode(hStdOut, ctypes.byref(mode))
-#         mode.value |= 4
-#         kernel32.SetConsoleMode(hStdOut, mode)
-
-# enable_ansi_support()
+import sys
 
 
 
@@ -164,7 +152,7 @@ class ViT:
       return model
 
 def display_patches(x_train, image_size, patch_size):
-  from matplotlib.figure import Figure
+
   fig, axs = plt.subplots(1, 1, figsize=(4, 4))
   fig.suptitle("Original Image")
   image = x_train[np.random.choice(range(x_train.shape[0]))]
@@ -209,7 +197,7 @@ def weights_to_images(model, batch):
         x = np.stack((rgb % 256, (rgb / 256) % 256, (rgb / (256*256)) % 256), axis=2)
         if x.shape[0] >= 1024:
             x = tf.image.resize(tf.convert_to_tensor(x), size=(256, x.shape[1]//(x.shape[0]//256))).numpy()
-        tf.keras.utils.save_img(f"data/{weight.path.replace('/', '_')}_{batch}.png", x, file_format='png')
+        tf.keras.utils.save_img(f"datanew/{weight.path.replace('/', '_')}_{batch}.png", x, file_format='png')
         pass #grayscale: weight * 255.0 #or make this a red, green or blue component
         #convert_weight_to_image(weight)
         ###RGB: weight * 255.0 * 255.0 * 255.0 cast int32 reshape int8 (...,...,3)
@@ -230,7 +218,7 @@ class WeightsCheckpoint(keras.callbacks.Callback):
         print("...Evaluating: start of batch {}; got log keys: {}".format(batch, keys))
 
 
-def run_experiment(factory, model, x_train, y_train, x_test, y_test):
+def run_experiment(factory, model, x_train, y_train, x_test, y_test, saveimage=False):
     optimizer = keras.optimizers.AdamW(
         learning_rate=factory.learning_rate, weight_decay=factory.weight_decay
     )
@@ -267,7 +255,8 @@ def run_experiment(factory, model, x_train, y_train, x_test, y_test):
         epochs=3,
         steps_per_epoch=10,
         validation_split=0.1,
-        callbacks=[checkpoint_callback, WeightsCheckpoint(tempdir)],
+        callbacks=[checkpoint_callback, WeightsCheckpoint(tempdir)]
+        if saveimage else [checkpoint_callback],
     )
 
     model.load_weights(checkpoint_filepath)
@@ -294,10 +283,8 @@ def plot_history(item, history, filename):
 
 
 
-def only_patches():
-  num_classes = 100
-  input_shape = (32, 32, 3)
-  (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
+def only_patches(datasource='cifar100'):
+  num_classes, input_shape, x_train, y_train, x_test, y_test = get_datasource(datasource)
   #(x_train, y_train), (x_test, y_test) = keras.datasets.cifar100.load_data()
   factory = ViT(num_classes, input_shape, x_train)
   return display_patches(x_train, factory.image_size, factory.patch_size)
@@ -341,10 +328,8 @@ def get_graph(factory, model):
 
     return (g, rg, layer_weights)
 
-def get_factory_model():
-    num_classes = 100
-    input_shape = (32, 32, 3)
-    (x_train, y_train), (x_test, y_test) = keras.datasets.cifar100.load_data()
+def get_factory_model(datasource='cifar100'):
+    num_classes, input_shape, x_train, y_train, x_test, y_test = get_datasource(datasource)
     print(f"x_train shape: {x_train.shape} - y_train shape: {y_train.shape}")
     print(f"x_test shape: {x_test.shape} - y_test shape: {y_test.shape}")
 
@@ -355,11 +340,45 @@ def get_factory_model():
     model = factory.create_vit_classifier() 
     return (factory, model, x_train, y_train, x_test, y_test)
   
-   
+def get_datasource(datasource):
+    if datasource == "cifar10":
+        num_classes = 10
+        input_shape = (32, 32, 3)
+        (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
+
+    elif datasource == "cifar100":
+        num_classes = 100
+        input_shape = (32, 32, 3)
+        (x_train, y_train), (x_test, y_test) = keras.datasets.cifar100.load_data()
+        
+    elif datasource == "mnistdigits":
+        num_classes = 10
+        input_shape = (28, 28, 1)
+        (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+        
+    elif datasource == "fashoinmnist":
+        num_classes = 10
+        input_shape = (28, 28, 1)
+        (x_train, y_train), (x_test, y_test) = keras.datasets.fashion_mnist.load_data()
+
+    return num_classes, input_shape, x_train, y_train, x_test, y_test
+      
+def generate_cache():
+    print("\nBuilding model...")
+    factory, model, x_train, y_train, x_test, y_test = get_factory_model(datasource=sys.argv[1])
+    
+    history = run_experiment(factory, model, x_train, y_train, x_test, y_test, saveimage=True)
+    # print(history.history.keys())
+    
+    plot_history("loss", history, 'loss_results.png')
+    plot_history("top-5-accuracy", history, 'top5_accuracy_results.png')
+
+      
+    
     
 def test_vit():
     print("\nBuilding model...")
-    factory, model, x_train, y_train, x_test, y_test = get_factory_model()
+    factory, model, x_train, y_train, x_test, y_test = get_factory_model(datasource=sys.argv[1])
     
     history = run_experiment(factory, model, x_train, y_train, x_test, y_test)
     # print(history.history.keys())

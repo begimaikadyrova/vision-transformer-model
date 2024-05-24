@@ -63,6 +63,15 @@ body {
   text-align: center;
 }
 
+.imageWrapper2 {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+
+
 
 .modal {
   display: flex;

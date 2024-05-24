@@ -138,6 +138,7 @@ function Training() {
 
   const onJumpToBegin = () => {
     setPosition(0);
+    onPlay();
   };
 
   const onJumpToEnd = () => {
@@ -206,6 +207,7 @@ function Training() {
         <p className="centered-text">Experience the learning process of a Vision Transformer through interactive visualizations that showcase the model's progress.
         <br></br>Select and explore different layers to understand their roles and see real-time changes in model parameters across various training epochs.</p>
         <p style={{fontSize: "17px"}}>Please, choose a <i><strong>layer</strong></i> to see how the model's weights change over time</p>
+        <p>Last epoch for CIFAR 100 dataset</p>
         <div className='selectMenu'>
           <Select placeholder="Please, select a layer"
             className="select-box"
@@ -299,7 +301,7 @@ function Training() {
             <h2>Layer: {selectedLayer?.label}</h2>
             <div className="imageWrapper">
             {layerData.find(layer => layer.value === selectedLayer?.value)?.images.map((image, index) => (
-                <div className="imageWrapper" key={index}>
+                <div className="imageWrapper2" key={index}>
                   <img src={image.urls[position]} alt={`${selectedLayer.label} ${position + 1} ${image.label}`}
                        onClick={() => openModal(image.urls[position])} />
                   <p>{image.label}</p>

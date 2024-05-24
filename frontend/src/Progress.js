@@ -26,17 +26,18 @@ function Progress() {
   const consoleRef = useRef(null);
 
   const handleStart = () => {
+    const dataset = document.getElementById('dataset').value;
     if (eventSource) {
       console.log("Attempted to start a new connection while one already exists.");
         return;
     }
-    console.log("Starting new connection.");
+    console.log("Starting new connection with dataset: ", dataset);
     setConsoleOutput(prev => prev.replace('\nNo output yet...', ''));
     setImageURLs([]);
     setShowResults(false);
     setIsTraining(true);
 
-    const source = new EventSource('http://localhost:5000/run_test');
+    const source = new EventSource(`http://localhost:5000/run_test/${dataset}`);
 
     source.onmessage = function(event) {
       if (event.data === "END_OF_STREAM") {
@@ -147,6 +148,13 @@ function Progress() {
           <button className="button-train button--show" onClick={handleStart} disabled={isTraining}>
             <span>{isTraining ? 'Training in Progress...' : 'Start Training'}</span>
           </button>
+          <div> Choose a dataset: </div>
+          <select id='dataset'>
+            <option value={'cifar10'}>CIFAR10</option>
+            <option value={'cifar100'}>CIFAR100</option>
+            <option value={'mnistdigits'}>MNIST digits </option>
+            <option value={'fashoinmnist'}>Fashion MNIST</option>
+          </select>
         </div>
         <div
           ref={consoleRef}
@@ -155,6 +163,7 @@ function Progress() {
             backgroundColor: '#000',
             color: '#fff',
             fontFamily: 'monospace',
+            marginTop: '10px',
             padding: '10px',
             whiteSpace: 'pre-wrap',
             width: '80%',
