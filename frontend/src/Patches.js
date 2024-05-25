@@ -20,12 +20,13 @@ function Patches() {
   const [showImages, setShowImages] = useState(false);
   const [showDescription, setShowDescription] = useState(true);
   const [error, setError] = useState('');
+  const [dataset, setDataset] = useState('cifar10');
 
-  const fetchImages = () => {
+  const fetchImages = (selectedDataset) => {
     setLoading(true);
     setShowDescription(false);
     setShowImages(false);
-    fetch('http://localhost:5000/patches')
+    fetch(`http://localhost:5000/patches/${selectedDataset}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -50,8 +51,9 @@ function Patches() {
     setShowDescription(!showDescription);
   };
 
-
- 
+  const handleDatasetChange = (event) => {
+    setDataset(event.target.value);
+  };
 
 
   return (
@@ -82,7 +84,7 @@ function Patches() {
               <span>Graph</span>
             </span>
           </Link>
-          <Link to="/progress">
+          <Link to="/process">
             <span className="nav-item">
               <PiTerminalWindow size={21}/>
               <span>Process</span>
@@ -102,13 +104,6 @@ function Patches() {
       <div className="content">
         <h1>Patches</h1>
         <h3>Understanding Patches in Vision Transformer</h3>
-        <div> Choose a dataset: </div>
-        <select id='dataset'>
-            <option value={'cifar10'}>CIFAR10</option>
-            <option value={'cifar100'}>CIFAR100</option>
-            <option value={'mnistdigits'}>MNIST digits </option>
-            <option value={'fashoinmnist'}>Fashion MNIST</option>
-          </select>
         {error && (
         <div className='error-message'>{error}</div>
       )}
@@ -126,6 +121,13 @@ function Patches() {
             </div>
           </>
         )}
+        <div> Choose a dataset: </div>
+        <select id='dataset' value={dataset} onChange={handleDatasetChange}>
+            <option value={'cifar10'}>CIFAR10</option>
+            <option value={'cifar100'}>CIFAR100</option>
+            <option value={'mnistdigits'}>MNIST digits</option>
+            <option value={'fashionmnist'}>Fashion MNIST</option>
+        </select>
          {!loading && showImages && (
           <button className="button button--show" onClick={toggleImages} style={{ marginBottom: '10px', marginTop: '10px' }}>
             <span>Hide Images</span>
@@ -138,7 +140,7 @@ function Patches() {
         )}
         {!loading && showImages && (
           <>
-            <button className="button button--show" onClick={fetchImages} style={{ marginBottom: '10px', marginTop: '10px' }}>
+            <button className="button button--show" onClick={() => fetchImages(dataset)} style={{ marginBottom: '10px', marginTop: '10px' }}>
               <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}> Next Images
                 <FaArrowCircleRight size={22} style={{ marginLeft: '5px' }} />
               </span>
@@ -156,7 +158,7 @@ function Patches() {
         )}
          {!showImages && !loading && (
           <div className="centerContainer">
-            <button className="button button--show" onClick={fetchImages}>
+            <button className="button button--show" onClick={() => fetchImages(dataset)}>
               <span>Show Images</span>
             </button>
           </div>

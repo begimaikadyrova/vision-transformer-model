@@ -37,7 +37,9 @@ class Patches(layers.Layer):
         batch_size = input_shape[0]
         height = input_shape[1]
         width = input_shape[2]
-        channels = input_shape[3]
+        # if len(input_shape) == 3:
+        #    images = tf.reshape(images, (*images.shape, 1))
+        channels = input_shape[3] # if len(input_shape) > 3 else 1
         num_patches_h = height // self.patch_size
         num_patches_w = width // self.patch_size
         images = tf.cast(images, tf.float32) / 255.0 #images = tf.image.convert_image_dtype(images, dtype=tf.float32, saturate=False)
@@ -156,21 +158,27 @@ def display_patches(x_train, image_size, patch_size):
   fig, axs = plt.subplots(1, 1, figsize=(4, 4))
   fig.suptitle("Original Image")
   image = x_train[np.random.choice(range(x_train.shape[0]))]
-  axs.imshow(image.astype("uint8"))
+  if image.shape[-1] == 1:
+     axs.imshow(image, cmap='gray')
+  else: 
+     axs.imshow(image.astype("uint8"))
   axs.axis("off")
-
+#   if len(image.shape) == 2:
+#      image = tf.reshape(image, (*image.shape, 1))
   resized_image = ops.image.resize(
       ops.convert_to_tensor([image]), size=(image_size, image_size)
   )
   patches = Patches(patch_size)(resized_image)
-
   n = int(np.sqrt(patches.shape[1]))
   figpatch, axs = plt.subplots(n, n, figsize=(4, 4))
   figpatch.suptitle("Patch Image")
   for i, patch in enumerate(patches[0]):
       ax = axs[i // n, i % n]
-      patch_img = ops.reshape(patch * 255.0, (patch_size, patch_size, 3))
-      ax.imshow(ops.convert_to_numpy(patch_img).astype("uint8"))
+      patch_img = ops.reshape(patch * 255.0, (patch_size, patch_size, image.shape[-1]))
+      if image.shape[-1] == 1:
+         ax.imshow(ops.convert_to_numpy(patch_img), cmap='gray')
+      else:
+         ax.imshow(ops.convert_to_numpy(patch_img).astype("uint8"))
       ax.axis("off")
   return fig, figpatch, [f"Image size: {image_size} X {image_size}",
     f"Patch size: {patch_size} X {patch_size}", 
@@ -252,8 +260,8 @@ def run_experiment(factory, model, x_train, y_train, x_test, y_test, saveimage=F
         x=x_train,
         y=y_train,
         batch_size=factory.batch_size,
-        epochs=3,
-        steps_per_epoch=10,
+        epochs=factory.num_epochs if saveimage else 3,
+        steps_per_epoch=None if saveimage else 10,
         validation_split=0.1,
         callbacks=[checkpoint_callback, WeightsCheckpoint(tempdir)]
         if saveimage else [checkpoint_callback],
@@ -355,11 +363,15 @@ def get_datasource(datasource):
         num_classes = 10
         input_shape = (28, 28, 1)
         (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+        x_train = tf.reshape(x_train, (*x_train.shape, 1))
+        x_test = tf.reshape(x_test, (*x_test.shape, 1))
         
-    elif datasource == "fashoinmnist":
+    elif datasource == "fashionmnist":
         num_classes = 10
         input_shape = (28, 28, 1)
         (x_train, y_train), (x_test, y_test) = keras.datasets.fashion_mnist.load_data()
+        x_train = tf.reshape(x_train, (*x_train.shape, 1))
+        x_test = tf.reshape(x_test, (*x_test.shape, 1))
 
     return num_classes, input_shape, x_train, y_train, x_test, y_test
       
@@ -378,7 +390,9 @@ def generate_cache():
     
 def test_vit():
     print("\nBuilding model...")
-    factory, model, x_train, y_train, x_test, y_test = get_factory_model(datasource=sys.argv[1])
+    datasource=sys.argv[1]
+    print(f"Datasource: {datasource}")  
+    factory, model, x_train, y_train, x_test, y_test = get_factory_model(datasource=datasource)
     
     history = run_experiment(factory, model, x_train, y_train, x_test, y_test)
     # print(history.history.keys())

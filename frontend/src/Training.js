@@ -184,7 +184,7 @@ function Training() {
               <span>Graph</span>
             </span>
           </Link>
-          <Link to="/progress">
+          <Link to="/process">
             <span className="nav-item">
               <PiTerminalWindow size={21}/>
               <span>Process</span>

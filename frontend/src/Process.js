@@ -17,7 +17,7 @@ const convert = new AnsiToHtml({
   stream: false 
 });
 
-function Progress() {
+function Process() {
   const [consoleOutput, setConsoleOutput] = useState('');
   const [eventSource, setEventSource] = useState(null);
   const [imageURLs, setImageURLs] = useState([]);
@@ -126,7 +126,7 @@ function Progress() {
               <span>Graph</span>
             </span>
           </Link>
-          <Link to="/progress">
+          <Link to="/process">
             <span className="nav-item active">
               <PiTerminalWindow size={21} />
               <span>Process</span>
@@ -153,7 +153,7 @@ function Progress() {
             <option value={'cifar10'}>CIFAR10</option>
             <option value={'cifar100'}>CIFAR100</option>
             <option value={'mnistdigits'}>MNIST digits </option>
-            <option value={'fashoinmnist'}>Fashion MNIST</option>
+            <option value={'fashionmnist'}>Fashion MNIST</option>
           </select>
         </div>
         <div
@@ -206,4 +206,4 @@ function Progress() {
   );
 }
 
-export default Progress;
+export default Process;

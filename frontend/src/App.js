@@ -4,7 +4,7 @@ import HomePage from './HomePage';
 import Training from './Training';
 import Patches from './Patches';
 import Graph from './Graph';
-import Progress from './Progress';
+import Process from './Process';
 import './App.css';
 
 
@@ -16,7 +16,7 @@ function App() {
         <Route path="/training" element={<Training />} />
         <Route path="/patches" element={<Patches />} />
         <Route path="/graph" element={<Graph />} />
-        <Route path="/progress" element={<Progress />} />
+        <Route path="/process" element={<Process />} />
        
       </Routes>
     </Router>
