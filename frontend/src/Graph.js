@@ -67,7 +67,6 @@ function Graph() {
         <h2 style={{margin: '0'}}>Model Overview</h2>
         <p className="description">
           The graph visualization on this page is generated using the <code><b>pydot</b></code> library, which creates a directed graph of the model architecture. 
-          <br></br>This visualization aids in understanding the complex structure of the Vision Transformer model.
         </p>
         <div className="graphpic">
           {loading ? (

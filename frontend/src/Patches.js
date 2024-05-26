@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Select from 'react-select';
 import './App.css';
 import { TbPhotoSearch } from "react-icons/tb";
 import { BsFillQuestionCircleFill } from "react-icons/bs";
@@ -26,7 +27,7 @@ function Patches() {
     setLoading(true);
     setShowDescription(false);
     setShowImages(false);
-    fetch(`http://localhost:5000/patches/${selectedDataset}`)
+    fetch(`http://localhost:5000/patchess/${selectedDataset}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -51,9 +52,16 @@ function Patches() {
     setShowDescription(!showDescription);
   };
 
-  const handleDatasetChange = (event) => {
-    setDataset(event.target.value);
+  const handleDatasetChange = (selectedOption) => {
+    setDataset(selectedOption.value);
   };
+
+  const datasetOptions = [
+    { value: 'cifar10', label: 'CIFAR10' },
+    { value: 'cifar100', label: 'CIFAR100' },
+    { value: 'mnistdigits', label: 'MNIST digits' },
+    { value: 'fashionmnist', label: 'Fashion MNIST' }
+  ];
 
 
   return (
@@ -121,15 +129,72 @@ function Patches() {
             </div>
           </>
         )}
-        <div> Choose a dataset: </div>
-        <select id='dataset' value={dataset} onChange={handleDatasetChange}>
-            <option value={'cifar10'}>CIFAR10</option>
-            <option value={'cifar100'}>CIFAR100</option>
-            <option value={'mnistdigits'}>MNIST digits</option>
-            <option value={'fashionmnist'}>Fashion MNIST</option>
-        </select>
+         <div>
+          <h3>Choose a dataset: </h3>
+        </div>
+        <div>
+          <Select
+            placeholder="Select a dataset"
+            className="select-box"
+            value={datasetOptions.find(option => option.value === dataset)}
+            onChange={handleDatasetChange}
+            options={datasetOptions}
+            styles={{
+              menuList: (provided) => ({
+                ...provided,
+                maxHeight: 'none',
+                overflow: 'visible',
+                paddingTop: 0,
+                paddingBottom: 0
+              }),
+              menu: (provided) => ({
+                ...provided,
+                marginTop: 3,
+                borderRadius: 0,
+              }),
+              control: (base, state) => ({
+                ...base,
+                backgroundColor: "#8494ac",
+                width: 280,
+                borderRadius: 0,
+                height: 45,
+                color: "white",
+                borderColor: state.isFocused ? '#f0f0f034' : 'grey',
+                boxShadow: state.isFocused ? '0 0 0 1px #f0f0f034' : 'none',
+                '&:hover': {
+                  borderColor: '#272d3a'
+                }
+              }),
+              option: (styles, { isFocused, isSelected }) => ({
+                ...styles,
+                height: 45,
+                margin: 0,
+                backgroundColor: isSelected ? 'darkgray' : isFocused ? 'lightgray' : undefined,
+                color: 'black',
+              }),
+              singleValue: (base) => ({
+                ...base,
+                color: '#272d3a',
+                fontWeight: 'bold'
+              }),
+              placeholder: (base) => ({
+                ...base,
+                color: '#272d3a',
+              }),
+              noOptionsMessage: (base) => ({
+                ...base,
+                height: 45,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'black',
+              }),
+            }}
+            noOptionsMessage={() => "No options"}
+          />
+        </div>
          {!loading && showImages && (
-          <button className="button button--show" onClick={toggleImages} style={{ marginBottom: '10px', marginTop: '10px' }}>
+          <button className="button button--show" onClick={toggleImages} style={{ marginBottom: '10px', marginTop: '20px' }}>
             <span>Hide Images</span>
           </button>
         )}

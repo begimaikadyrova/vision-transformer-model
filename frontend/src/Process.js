@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import Select from 'react-select';
 import './App.css';
 import { TbPhotoSearch } from "react-icons/tb";
 import { BsFillQuestionCircleFill } from "react-icons/bs";
@@ -17,13 +18,22 @@ const convert = new AnsiToHtml({
   stream: false 
 });
 
+const datasetOptions = [
+  { value: 'cifar10', label: 'CIFAR10' },
+  { value: 'cifar100', label: 'CIFAR100' },
+  { value: 'mnistdigits', label: 'MNIST digits' },
+  { value: 'fashionmnist', label: 'Fashion MNIST' }
+];
+
 function Process() {
   const [consoleOutput, setConsoleOutput] = useState('');
   const [eventSource, setEventSource] = useState(null);
   const [imageURLs, setImageURLs] = useState([]);
   const [showResults, setShowResults] = useState(false);
   const [isTraining, setIsTraining] = useState(false);
+  const [selectedDataset, setSelectedDataset] = useState(datasetOptions[0]);
   const consoleRef = useRef(null);
+
 
   const handleStart = () => {
     const dataset = document.getElementById('dataset').value;
@@ -98,6 +108,10 @@ function Process() {
     }
   }, [consoleOutput]);
 
+  const handleDatasetChange = (selectedOption) => {
+    setSelectedDataset(selectedOption);
+  };
+
   return (
     <div className="App">
       <div className="sidebar">
@@ -144,17 +158,75 @@ function Process() {
       </div>
       <div className="content">
       <h1>ViT Training Logs</h1>
-        <div style={{ marginBottom: '20px' }}>
+      <div style={{textAlign: 'center', marginTop: '0'}}>
+          <h3>Choose a dataset for training: </h3>
+        </div>
+          <div >
+            <Select
+              placeholder="Select a dataset"
+              className="select-box"
+              value={selectedDataset}
+              onChange={handleDatasetChange}
+              options={datasetOptions}
+              styles={{
+                menuList: (provided) => ({
+                  ...provided,
+                  maxHeight: 'none',
+                  overflow: 'visible',
+                  paddingTop: 0,
+                  paddingBottom: 0
+                }),
+                menu: (provided) => ({
+                  ...provided,
+                  marginTop: 3,
+                  borderRadius: 0,
+                }),
+                control: (base, state) => ({
+                  ...base,
+                  backgroundColor: "#8494ac",
+                  width: 280,
+                  borderRadius: 0,
+                  height: 45,
+                  color: "white",
+                  borderColor: state.isFocused ? '#f0f0f034' : 'grey',
+                  boxShadow: state.isFocused ? '0 0 0 1px #f0f0f034' : 'none',
+                  '&:hover': {
+                    borderColor: '#272d3a'
+                  }
+                }),
+                option: (styles, { isFocused, isSelected }) => ({
+                  ...styles,
+                  height: 45,
+                  margin: 0,
+                  backgroundColor: isSelected ? 'darkgray' : isFocused ? 'lightgray' : undefined,
+                  color: 'black',
+                }),
+                singleValue: (base) => ({
+                  ...base,
+                  color: '#272d3a',
+                  fontWeight: 'bold'
+                }),
+                placeholder: (base) => ({
+                  ...base,
+                  color: '#272d3a',
+                }),
+                noOptionsMessage: (base) => ({
+                  ...base,
+                  height: 45,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'black',
+                }),
+              }}
+              noOptionsMessage={() => "No options"}
+            />
+          </div>
+        <div style={{ marginBottom: '20px', marginTop: '20px' }}>
           <button className="button-train button--show" onClick={handleStart} disabled={isTraining}>
             <span>{isTraining ? 'Training in Progress...' : 'Start Training'}</span>
           </button>
-          <div> Choose a dataset: </div>
-          <select id='dataset'>
-            <option value={'cifar10'}>CIFAR10</option>
-            <option value={'cifar100'}>CIFAR100</option>
-            <option value={'mnistdigits'}>MNIST digits </option>
-            <option value={'fashionmnist'}>Fashion MNIST</option>
-          </select>
+          
         </div>
         <div
           ref={consoleRef}

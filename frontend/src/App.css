@@ -403,7 +403,7 @@ body {
 }
 
 .centerParagraph {
-  margin-top: 230px;
+  margin-top: 180px;
   margin-left: 40px;
 }
 
@@ -412,7 +412,6 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 20px;
 }
 
 .description {
@@ -426,6 +425,9 @@ body {
   margin-top: 40px;
   margin-right: 110px;
 }
+
+
+
 
 @keyframes App-logo-spin {
   from {
