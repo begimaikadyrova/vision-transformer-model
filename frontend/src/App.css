@@ -421,11 +421,32 @@ body {
   text-align: center;
 }
 
+
 .graphpic {
-  margin-top: 40px;
-  margin-right: 110px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px; 
+  margin-right: 100px;
 }
 
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+  width: 100%;
+  margin-right: 25px;
+}
+
+.label {
+  margin-right: 10px; 
+}
+
+
+.error-message {
+  color: red;
+}
 
 
 

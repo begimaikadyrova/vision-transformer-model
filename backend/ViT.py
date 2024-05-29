@@ -81,13 +81,13 @@ class PatchEncoder(layers.Layer):
         config.update({"num_patches": self.num_patches})
         return config
 class ViT:
-  def __init__(self, num_classes, input_shape, x_train):
+  def __init__(self, num_classes, input_shape, x_train, num_epochs=10):
     self.num_classes = num_classes
     self.input_shape = input_shape
     self.learning_rate = 0.001
     self.weight_decay = 0.0001
     self.batch_size = 256
-    self.num_epochs = 10  # For real training, use num_epochs=100. 10 is a test value
+    self.num_epochs = num_epochs   # For real training, use num_epochs=100. 10 is a test value
     self.image_size = 72  # We'll resize input images to this size
     self.patch_size = 6  # Size of the patches to be extract from the input images
     self.num_patches = (self.image_size // self.patch_size) ** 2
@@ -186,6 +186,9 @@ def display_patches(x_train, image_size, patch_size):
     f"Elements per patch: {patches.shape[-1]}"]
 
 def weights_to_images(model, batch):
+    directory = "datanew"
+    if not os.path.exists(directory):
+        os.makedirs(directory)
     for layer in model.layers:
       for weight in layer.trainable_weights:
         x = keras.ops.convert_to_numpy(weight) #(x, y) or (x,) or (x, y, z) but we want (x, y, 3)
@@ -205,11 +208,11 @@ def weights_to_images(model, batch):
         x = np.stack((rgb % 256, (rgb / 256) % 256, (rgb / (256*256)) % 256), axis=2)
         if x.shape[0] >= 1024:
             x = tf.image.resize(tf.convert_to_tensor(x), size=(256, x.shape[1]//(x.shape[0]//256))).numpy()
-        tf.keras.utils.save_img(f"datanew/{weight.path.replace('/', '_')}_{batch}.png", x, file_format='png')
-        pass #grayscale: weight * 255.0 #or make this a red, green or blue component
+        image_path = os.path.join(directory, f"{weight.path.replace('/', '_')}_{batch}.png")
+        tf.keras.utils.save_img(image_path, x, file_format='png')
         #convert_weight_to_image(weight)
         ###RGB: weight * 255.0 * 255.0 * 255.0 cast int32 reshape int8 (...,...,3)
-    # assert False
+    # assert False   
             
 
 class WeightsCheckpoint(keras.callbacks.Callback):
@@ -260,7 +263,7 @@ def run_experiment(factory, model, x_train, y_train, x_test, y_test, saveimage=F
         x=x_train,
         y=y_train,
         batch_size=factory.batch_size,
-        epochs=factory.num_epochs if saveimage else 3,
+        epochs=factory.num_epochs,
         steps_per_epoch=None if saveimage else 10,
         validation_split=0.1,
         callbacks=[checkpoint_callback, WeightsCheckpoint(tempdir)]
@@ -336,12 +339,12 @@ def get_graph(factory, model):
 
     return (g, rg, layer_weights)
 
-def get_factory_model(datasource='cifar100'):
+def get_factory_model(datasource='cifar100', num_epochs=10):
     num_classes, input_shape, x_train, y_train, x_test, y_test = get_datasource(datasource)
     print(f"x_train shape: {x_train.shape} - y_train shape: {y_train.shape}")
     print(f"x_test shape: {x_test.shape} - y_test shape: {y_test.shape}")
 
-    factory = ViT(num_classes, input_shape, x_train)
+    factory = ViT(num_classes, input_shape, x_train, num_epochs)
     display_patches(x_train, factory.image_size, factory.patch_size)
 
     
@@ -380,7 +383,6 @@ def generate_cache():
     factory, model, x_train, y_train, x_test, y_test = get_factory_model(datasource=sys.argv[1])
     
     history = run_experiment(factory, model, x_train, y_train, x_test, y_test, saveimage=True)
-    # print(history.history.keys())
     
     plot_history("loss", history, 'loss_results.png')
     plot_history("top-5-accuracy", history, 'top5_accuracy_results.png')
@@ -391,11 +393,11 @@ def generate_cache():
 def test_vit():
     print("\nBuilding model...")
     datasource=sys.argv[1]
+    num_epochs = int(sys.argv[2])
     print(f"Datasource: {datasource}")  
-    factory, model, x_train, y_train, x_test, y_test = get_factory_model(datasource=datasource)
+    factory, model, x_train, y_train, x_test, y_test = get_factory_model(datasource, num_epochs)
     
     history = run_experiment(factory, model, x_train, y_train, x_test, y_test)
-    # print(history.history.keys())
     
     plot_history("loss", history, 'loss_results.png')
     plot_history("top-5-accuracy", history, 'top5_accuracy_results.png')

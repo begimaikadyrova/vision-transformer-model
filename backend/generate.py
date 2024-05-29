@@ -1,9 +1,8 @@
 from ViT import get_factory_model, run_experiment, plot_history
-import sys
 
 def generate_cache():
     print("\nBuilding model...")
-    factory, model, x_train, y_train, x_test, y_test = get_factory_model(datasource='cifar100')
+    factory, model, x_train, y_train, x_test, y_test =  get_factory_model(datasource='cifar100', num_epochs=10)
     
     history = run_experiment(factory, model, x_train, y_train, x_test, y_test, saveimage=True)
     

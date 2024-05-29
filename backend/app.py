@@ -8,7 +8,6 @@ import io
 import ViT
 import graph
 from os import path
-import multiprocessing as mp
 import os
 import subprocess
 
@@ -22,11 +21,11 @@ CORS(app)
 os.environ['PYTHONIOENCODING'] = 'utf-8'
 
 
-@app.route('/run_test/<datasource>')
-def run_test(datasource):
+@app.route('/run_test/<datasource>/<int:epochs>')
+def run_test(datasource, epochs):
     def generate():
         yield "data: Training process has started...\n\n" 
-        with subprocess.Popen(["python", "-u" , "ViT.py", datasource], stdout=subprocess.PIPE, bufsize=1, text=True, encoding='utf-8') as process:
+        with subprocess.Popen(["python", "-u" , "ViT.py", datasource, str(epochs)], stdout=subprocess.PIPE, bufsize=1, text=True, encoding='utf-8') as process:
             for line in iter(process.stdout.readline, ''):
                 yield f"data: {line}\n\n"
             process.stdout.close()
@@ -36,14 +35,6 @@ def run_test(datasource):
             yield "data: END_OF_STREAM\n\n"
 
     return Response(stream_with_context(generate()), mimetype='text/event-stream')
-
-
-
-
-
-
-
-###################################
 
 
 @app.route("/")
@@ -106,10 +97,6 @@ def get_graph():
         "layer_weights": layer_weights
     }
     return jsonify(response)
-
-
-
-###################################
 
 
 

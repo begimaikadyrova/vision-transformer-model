@@ -21,6 +21,7 @@ function Training() {
   const [showPictures, setShowPictures] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
+  const [error, setError] = useState(null);
   
 
   useEffect(() => {
@@ -86,7 +87,9 @@ function Training() {
         })
         .catch(error => {
           console.error('There was a problem with the fetch operation:', error);
+          setError('Failed to load layer data. Please try again later.');
         });
+        
     }
   
     return () => {
@@ -206,8 +209,11 @@ function Training() {
         <p style={{marginTop: '15px', marginBottom: '0', lineHeight: "0.5" }}><b>Dynamic Learning Visualization</b></p>
         <p className="centered-text">Experience the learning process of a Vision Transformer through interactive visualizations that showcase the model's progress.
         <br></br>Select and explore different layers to understand their roles and see real-time changes in model parameters across various training epochs.</p>
-        <p style={{fontSize: "17px"}}>Please, choose a <i><strong>layer</strong></i> to see how the model's weights change over time</p>
         <p>Last epoch for "CIFAR100" dataset</p>
+        <p style={{fontSize: "17px"}}>Please, choose a <i><strong>layer</strong></i> to see how the model's weights change over time</p>
+        {error && (
+          <p className="error-message" style={{color: 'red'}}>{error}</p>
+        )}
         <div className='selectMenu'>
           <Select placeholder="Please, select a layer"
             className="select-box"
@@ -217,8 +223,8 @@ function Training() {
             styles={{
               menuList: (provided) => ({
                 ...provided,
-                maxHeight: 'none', 
-                overflow: 'visible',
+                maxHeight: '500px', 
+                overflow: 'auto',
                 
                 paddingTop: 0,
                 paddingBottom: 0
@@ -231,7 +237,7 @@ function Training() {
               control: (base, state) => ({
                 ...base,
                 backgroundColor: "#1d2535",
-                width: 346,
+                width: 355,
                 borderRadius: 0,  
                 height: 45,
                 color: "white",
@@ -271,6 +277,7 @@ function Training() {
           />
 
         </div>
+        
 
 
 

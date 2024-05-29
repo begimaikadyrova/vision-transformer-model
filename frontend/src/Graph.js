@@ -13,9 +13,16 @@ import { PiTerminalWindow } from "react-icons/pi";
 
 function Graph() {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const handleImageLoaded = () => {
     setLoading(false);
+    setError(null); 
+  };
+
+  const handleImageError = () => {
+    setLoading(false);
+    setError('Failed to load graph. Please try again later.'); 
   };
 
   return (
@@ -69,17 +76,20 @@ function Graph() {
           The graph visualization on this page is generated using the <code><b>pydot</b></code> library, which creates a directed graph of the model architecture. 
         </p>
         <div className="graphpic">
-          {loading ? (
+          {loading && (
             <p style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginLeft: '110px'}}>
               Please wait until the graph is generated...
               <img src="/loading-gif.gif" alt="Loading" style={{ width: '20px', height: '18px', marginLeft: '5px' }} />
             </p>
-          ) : null}
-          <img src="http://localhost:5000/get_graph_image" alt="Graph" onLoad={handleImageLoaded} />
+          )}
+          
+          {error && <p className="error-message" style={{marginLeft: "120px"}}>{error}</p>}
+          <img src="http://localhost:5000/get_graph_image" alt="Graph" onLoad={handleImageLoaded} onError={handleImageError} />
         </div>
       </div>
     </div>
   );
 }
+
 
 export default Graph;

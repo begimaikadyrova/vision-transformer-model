@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@testing-library/user-event": "^13.5.0",
+    "@xterm/xterm": "^5.5.0",
+    "ansi-to-html": "^0.7.2",
     "axios": "^1.6.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -11,7 +13,8 @@
     "react-router-dom": "^6.22.3",
     "react-scripts": "^5.0.1",
     "react-select": "^5.8.0",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "xterm": "^5.3.0"
   },
   "scripts": {
     "test": "react-scripts test --coverage",
