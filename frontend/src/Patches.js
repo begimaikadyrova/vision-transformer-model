@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
+import { components } from 'react-select';
 import './App.css';
 import { TbPhotoSearch } from "react-icons/tb";
 import { BsFillQuestionCircleFill } from "react-icons/bs";
@@ -10,7 +11,15 @@ import { BsDiagram3Fill } from "react-icons/bs";
 import { PiTerminalWindow } from "react-icons/pi";
 import { FaArrowCircleRight } from "react-icons/fa";
 
-
+const DropdownIndicator = (props) => {
+  return (
+    <components.DropdownIndicator {...props}>
+      <svg height="20" width="20" viewBox="0 0 20 20">
+        <path d="M5 8l5 5 5-5H5z" fill="black" />
+      </svg>
+    </components.DropdownIndicator>
+  );
+};
 
 
 
@@ -26,8 +35,7 @@ function Patches() {
   const fetchImages = (selectedDataset) => {
     setLoading(true);
     setShowDescription(false);
-    setShowImages(false);
-    fetch(`http://localhost:5000/patchess/${selectedDataset}`)
+    fetch(`http://localhost:5000/patches/${selectedDataset}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -44,6 +52,7 @@ function Patches() {
       .catch(error => {
         setLoading(false);
         setError(`There was a problem with the fetch operation: ${error.message}`);
+        setShowImages(false);
       });
   };
 
@@ -116,7 +125,7 @@ function Patches() {
         <div className='error-message'>{error}</div>
       )}
         {showDescription && (
-          <>
+          
             <div className='patchespage'>
               <p className="centered-text" style={{lineHeight: "2", marginTop: "0"}}>
               Explore how Vision Transformers split images into small, manageable segments known as patches.
@@ -127,10 +136,10 @@ function Patches() {
               <p><b>Click on the button below</b> to view how Vision Transformers preprocess visuals by breaking them into patches.
               </p>
             </div>
-          </>
+          
         )}
          <div>
-          <h3>Choose a dataset: </h3>
+          <h3>Choose a dataset for patches: </h3>
         </div>
         <div>
           <Select
@@ -139,6 +148,7 @@ function Patches() {
             value={datasetOptions.find(option => option.value === dataset)}
             onChange={handleDatasetChange}
             options={datasetOptions}
+            components={{ DropdownIndicator }}
             styles={{
               menuList: (provided) => ({
                 ...provided,
@@ -154,7 +164,7 @@ function Patches() {
               }),
               control: (base, state) => ({
                 ...base,
-                backgroundColor: "#8494ac",
+                backgroundColor: "#cdd4dd",
                 width: 280,
                 borderRadius: 0,
                 height: 45,
@@ -163,6 +173,16 @@ function Patches() {
                 boxShadow: state.isFocused ? '0 0 0 1px #f0f0f034' : 'none',
                 '&:hover': {
                   borderColor: '#272d3a'
+                },
+                '&:after': {
+                  content: '" "',
+                  display: 'block',
+                  position: 'absolute',
+                  right: '36px',
+                  top: '8px',
+                  bottom: '8px',
+                  width: '1px',
+                  backgroundColor: 'black', 
                 }
               }),
               option: (styles, { isFocused, isSelected }) => ({
@@ -205,7 +225,7 @@ function Patches() {
         )}
         {!loading && showImages && (
           <>
-            <button className="button button--show" onClick={() => fetchImages(dataset)} style={{ marginBottom: '10px', marginTop: '10px' }}>
+                        <button className="button button--show" onClick={() => fetchImages(dataset)} style={{ marginBottom: '10px', marginTop: '10px' }}>
               <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}> Next Images
                 <FaArrowCircleRight size={22} style={{ marginLeft: '5px' }} />
               </span>
