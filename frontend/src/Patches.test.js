@@ -3,7 +3,6 @@ import { render, fireEvent, waitFor, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Patches from './Patches';
 
-// Mocking react-router-dom Link to avoid errors related to router context missing in test environment
 jest.mock('react-router-dom', () => ({
   Link: ({ children }) => <div>{children}</div>
 }));
@@ -12,7 +11,6 @@ beforeEach(() => {
     global.fetch = jest.fn();
   });
 
-// Setup fetch mock
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
@@ -25,13 +23,11 @@ describe(Patches, () => {
     fetch.mockClear();
   });
 test('handles fetch failure', async () => {
-  // Cause the fetch to fail
   fetch.mockImplementationOnce(() => Promise.reject(new Error('Network failure')));
 
   const { getByText } = render(<Patches />);
   fireEvent.click(getByText('Show Images'));
 
-  // Wait for error message to be displayed
   await waitFor(() => {
     expect(screen.getByText('Network failure')).toBeInTheDocument();
   });
@@ -51,12 +47,10 @@ test('handles fetch failure', async () => {
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenCalledWith('http://localhost:5000/patches');
 
-    // Wait for images to be displayed
     await waitFor(() => {
       expect(screen.getByText('Hide Images')).toBeInTheDocument();
     });
 
-    // Verify images are rendered
     const images = await findAllByRole('img');
     expect(images.length).toBe(2);
     expect(images[0]).toHaveAttribute('src', 'data:image/png;base64,image1base64');

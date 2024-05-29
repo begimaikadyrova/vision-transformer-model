@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Graph from './Graph';
 
-// Mocking react-router-dom Link to avoid errors related to router context missing in test environment
+
 jest.mock('react-router-dom', () => ({
   Link: ({ children }) => <div>{children}</div>
 }));
@@ -11,7 +11,7 @@ jest.mock('react-router-dom', () => ({
 describe('Graph component', () => {
   test('renders Graph component without crashing', () => {
     render(<Graph />);
-    screen.debug(); // This will print out the rendered HTML
+    screen.debug(); 
     expect(screen.getByText('Graph')).toBeInTheDocument();
     expect(screen.getByText('Model Overview')).toBeInTheDocument();
   });
